@@ -2,13 +2,7 @@ version: '3.8'  # Specify the Docker Compose version
 
 services:
   # Define your Django service (name it anything you like)
-  my_django_app:
+  my_django_app2:
     build: .  # Build the image from the current directory (where the Dockerfile resides)
     ports:
       - "8000:8000"  # Map container port 8000 to host port 8000
-    volumes:
-      - .:/app  # Mount the current directory as /app inside the container (for code changes)
-    # Additional environment variables or dependencies can be specified here
-
-  # Add other services here (e.g., database)
-  # ...

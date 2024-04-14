@@ -1,10 +1,25 @@
-FROM python:3.10-slim-buster  
+FROM python:3.10
 
-WORKDIR /home
+ENV PYTHONUNBUFFERED 1
 
-COPY requirements/requirements.txt . 
-RUN pip install -r requirements.txt
+# RUN apt-get update
 
-COPY . .
+RUN useradd -ms /bin/bash hossam
+ENV PATH="/home/hossam/.local/bin:${PATH}"
 
-CMD [ "python3", "manage.py", "runserver"]
+USER hossam
+COPY --chown=hossam . /home/hossam/
+
+RUN python3 -m pip install --upgrade pip
+RUN pip install --no-cache-dir -r /home/hossam/requirements.txt
+RUN chmod +x /home/hossam/entrypoint.sh
+
+WORKDIR /home/hossam/
+
+
+EXPOSE 8000
+
+
+ENTRYPOINT ["/home/hossam/entrypoint.sh"]
+# alias deploy-backend="cd /home/hossam/backend-api/ && git pull && docker-compose up --build -d"
+# alias deploy-frontend="cd /home/islam/frontend-admin/ && git pull && docker-compose up --build -d"
