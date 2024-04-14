@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from users.models import Admin
+from users.models import User
 
 
-class AdminSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
-        model = Admin
+        model = User
         fields = '__all__'
