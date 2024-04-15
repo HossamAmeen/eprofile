@@ -11,7 +11,7 @@ USER hossam
 COPY --chown=hossam . /home/hossam/
 
 RUN python3 -m pip install --upgrade pip
-RUN pip install --no-cache-dir -r /home/hossam/requirements.txt
+RUN pip install --no-cache-dir -r /home/hossam/requirements/requirements.txt
 RUN chmod +x /home/hossam/entrypoint.sh
 
 WORKDIR /home/hossam/
