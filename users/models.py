@@ -11,15 +11,18 @@ class User(AbstractUser, TimeStampedModel):
     full_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField(unique=True)
-    role = models.CharField(max_length=12)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']
 
     def save(self, **kwargs):
-        self.password = make_password(self.password)
         super().save(**kwargs)
 
 
 class Admin(User):
     pass
+
+
+class Student(User):
+    birth_of_date = models.DateField()
+    competence_level = models.CharField(max_length=5)
