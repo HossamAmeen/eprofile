@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from users.models import User, Student
+from users.models import User, Student, StaffMember
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,4 +15,12 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
+        fields = '__all__'
+
+
+class StaffMemberSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = StaffMember
         fields = '__all__'

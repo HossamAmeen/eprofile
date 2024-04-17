@@ -26,3 +26,7 @@ class Admin(User):
 class Student(User):
     birth_of_date = models.DateField()
     competence_level = models.CharField(max_length=5)
+
+
+class StaffMember(User):
+    specialty = models.CharField(max_length=100)
