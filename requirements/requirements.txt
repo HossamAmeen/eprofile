@@ -4,3 +4,6 @@ django-extensions==3.2.3
 
 # for run server
 daphne==4.0.0
+
+# for auth
+djangorestframework-simplejwt==5.3.1

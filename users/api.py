@@ -1,7 +1,8 @@
 
 from rest_framework.viewsets import ModelViewSet
 from users.models import User, Admin, Student, StaffMember
-from users.serializers import UserSerializer, StudentSerializer, StaffMemberSerializer
+from users.serializers import UserSerializer, AdminSerializer, StudentSerializer, StaffMemberSerializer
+from django.contrib.auth.hashers import make_password
 
 
 class UserViewSet(ModelViewSet):
@@ -9,11 +10,15 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.order_by('-id')
     serializer_class = UserSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(password=make_password(
+            serializer.validated_data['password']))
 
-class AdminViewSet(ModelViewSet):
+
+class AdminViewSet(UserViewSet):
     permission_classes = []
     queryset = Admin.objects.order_by('-id')
-    serializer_class = UserSerializer
+    serializer_class = AdminSerializer
 
 
 class StudentViewSet(ModelViewSet):
