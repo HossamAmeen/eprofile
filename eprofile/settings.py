@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [
     '*', 'http://localhost:80', 'http://localhost:8080',
     'http://localhost:81', 'http://localhost:8081'
 ]
-
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
