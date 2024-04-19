@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '*', 'http://localhost:80', 'http://localhost:8080',
-    'http://localhost:81', 'http://localhost:8081'
+    'http://localhost:81', 'http://localhost:8081', 'http://localhost:4200'
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 

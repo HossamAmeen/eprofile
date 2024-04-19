@@ -2,6 +2,9 @@ djangorestframework==3.15.1
 Django==5.0.4
 django-extensions==3.2.3
 
+# for cors
+django-cors-headers==4.3.1
+
 # for run server
 daphne==4.0.0
 
