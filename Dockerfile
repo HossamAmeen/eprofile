@@ -21,5 +21,5 @@ EXPOSE 8000
 
 
 ENTRYPOINT ["/home/hossam/entrypoint.sh"]
-# alias deploy-backend="cd /home/hossam/backend-api/ && git pull && docker-compose up --build -d"
+# alias deploy-backend="cd /home/eprofile/ && git pull && docker compose up --build -d"
 # alias deploy-frontend="cd /home/islam/frontend-admin/ && git pull && docker-compose up --build -d"

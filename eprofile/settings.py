@@ -43,7 +43,8 @@ INSTALLED_APPS = [
 ]
 
 MODEL_APP = [
-    'users'
+    'users',
+    'activities'
 ]
 THIRD_PARTY_APP = [
     'rest_framework',
@@ -86,7 +87,7 @@ WSGI_APPLICATION = 'eprofile.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination', # noqa
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': 25,
     'DEFAULT_AUTHENTICATION_CLASSES': (   
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )

@@ -1,8 +1,10 @@
 
-from rest_framework.viewsets import ModelViewSet
-from users.models import User, Admin, Student, StaffMember
-from users.serializers import UserSerializer, AdminSerializer, StudentSerializer, StaffMemberSerializer
 from django.contrib.auth.hashers import make_password
+from rest_framework.viewsets import ModelViewSet
+
+from users.models import Admin, StaffMember, Student, User
+from users.serializers import (AdminSerializer, StaffMemberSerializer,
+                               StudentSerializer, UserSerializer)
 
 
 class UserViewSet(ModelViewSet):

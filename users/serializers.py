@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from users.models import User, Admin, Student, StaffMember
+
+from users.models import Admin, StaffMember, Student, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,3 +31,9 @@ class StaffMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffMember
         fields = '__all__'
+
+
+class SingleStaffMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StaffMember
+        fields = ['id', 'full_name', 'specialty']
