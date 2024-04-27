@@ -12,3 +12,6 @@ class LectureViewSet(ModelViewSet):
         if self.request.method == "POST":
             return LectureSerializer
         return ListLectureSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(student_id=self.request.user.id)
