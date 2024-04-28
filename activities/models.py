@@ -14,6 +14,7 @@ class StudentActivity(models.Model):
         max_length=30, choices=ApproveStatus.choices,
         default=ApproveStatus.PENDING)
     feedback = models.TextField(null=True, blank=True)
+    score = models.IntegerField(default=0)
     staff_member = models.ForeignKey(StaffMember, null=True,
                                      on_delete=models.SET_NULL)
     student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)

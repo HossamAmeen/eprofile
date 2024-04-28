@@ -16,6 +16,12 @@ class User(AbstractUser, TimeStampedModel):
     def save(self, **kwargs):
         super().save(**kwargs)
 
+    def get_role(self):
+        if hasattr(self, 'student'):
+            return "student"
+        elif hasattr(self, 'staffmember'):
+            return "staff_member"
+
 
 class Admin(User):
     pass

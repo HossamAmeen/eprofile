@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from users.models import Admin, StaffMember, Student, User
 
@@ -37,3 +38,11 @@ class SingleStaffMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffMember
         fields = ['id', 'full_name', 'specialty']
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['role'] = user.get_role()
+        return token
