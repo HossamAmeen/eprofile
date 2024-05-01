@@ -1,6 +1,8 @@
 
 from django.contrib.auth.hashers import make_password
 from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 from users.models import Admin, StaffMember, Student, User, Empolyee
 from users.serializers import (AdminSerializer, StaffMemberSerializer,
@@ -31,6 +33,8 @@ class StudentViewSet(ModelViewSet):
     permission_classes = []
     queryset = Student.objects.order_by('-id')
     serializer_class = StudentSerializer
+    filterset_fields = ['competence_level']
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
 
     def perform_create(self, serializer):
         serializer.save(password=make_password(
