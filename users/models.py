@@ -34,3 +34,7 @@ class Student(User):
 
 class StaffMember(User):
     specialty = models.CharField(max_length=100)
+
+
+class Empolyee(User):
+    pass

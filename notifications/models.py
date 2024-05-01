@@ -6,6 +6,7 @@ class Notification(models.Model):
     title = models.CharField(max_length=250)
     body = models.TextField()
     link = models.CharField(max_length=250)
+    is_read = models.BooleanField(default=False)
 
 
 class ActivityNotification(Notification):

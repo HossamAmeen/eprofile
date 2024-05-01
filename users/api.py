@@ -2,9 +2,9 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework.viewsets import ModelViewSet
 
-from users.models import Admin, StaffMember, Student, User
+from users.models import Admin, StaffMember, Student, User, Empolyee
 from users.serializers import (AdminSerializer, StaffMemberSerializer,
-                               StudentSerializer, UserSerializer)
+                               StudentSerializer, UserSerializer, EmployeeSerializer)
 
 
 class UserViewSet(ModelViewSet):
@@ -41,6 +41,16 @@ class StaffMemberViewSet(UserViewSet):
     permission_classes = []
     queryset = StaffMember.objects.order_by('-id')
     serializer_class = StaffMemberSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(password=make_password(
+            serializer.validated_data['password']))
+
+
+class EmployeeViewSet(UserViewSet):
+    permission_classes = []
+    queryset = Empolyee.objects.order_by('-id')
+    serializer_class = EmployeeSerializer
 
     def perform_create(self, serializer):
         serializer.save(password=make_password(
