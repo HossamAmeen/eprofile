@@ -1,11 +1,17 @@
 from rest_framework.viewsets import ModelViewSet
 
-from activities.models import ClinicAttendance, Lecture
+from activities.models import (ClinicAttendance, Lecture, OperationAttendance,
+                               ShiftAttendance)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    LectureSerializer,
                                    ListClinicAttendanceSerializer,
-                                   ListLectureSerializer)
+                                   ListLectureSerializer,
+                                   ListOperationAttendanceSerializer,
+                                   ListShiftAttendanceSerializer,
+                                   OperationAttendanceSerializer,
+                                   ShiftAttendanceSerializer)
 from notifications.models import ActivityNotification
+
 
 class LectureViewSet(ModelViewSet):
     permission_classes = []
@@ -31,11 +37,50 @@ class ClinicViewSet(ModelViewSet):
         return ListClinicAttendanceSerializer
 
     def perform_create(self, serializer):
-        print(serializer.validated_data['staff_member'])
         serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
             title="title",
             body="student ask your feedback about clinic attendance",
+            student_id=self.request.user.id,
+            staff_member_id=serializer.validated_data['staff_member'].id,
+            link='clinic/1/'
+        )
+
+
+class ShiftAttendanceViewSet(ModelViewSet):
+    permission_classes = []
+    queryset = ShiftAttendance.objects.order_by('-id')
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return ShiftAttendanceSerializer
+        return ListShiftAttendanceSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(student_id=self.request.user.id)
+        ActivityNotification.objects.create(
+            title="title",
+            body="student ask your feedback about shift attendance",
+            student_id=self.request.user.id,
+            staff_member_id=serializer.validated_data['staff_member'].id,
+            link='clinic/1/'
+        )
+
+
+class OperationAttendanceViewSet(ModelViewSet):
+    permission_classes = []
+    queryset = OperationAttendance.objects.order_by('-id')
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return OperationAttendanceSerializer
+        return ListOperationAttendanceSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(student_id=self.request.user.id)
+        ActivityNotification.objects.create(
+            title="title",
+            body="student ask your feedback about operation attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
             link='clinic/1/'

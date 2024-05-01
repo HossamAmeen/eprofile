@@ -1,6 +1,7 @@
 from rest_framework.routers import DefaultRouter
 
-from users.api import AdminViewSet, StaffMemberViewSet, StudentViewSet, EmployeeViewSet
+from users.api import (AdminViewSet, EmployeeViewSet, StaffMemberViewSet,
+                       StudentViewSet)
 
 router = DefaultRouter()
 router.register(r'admins', AdminViewSet)

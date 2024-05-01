@@ -1,5 +1,6 @@
 from django.db import models
-from users.models import Student, StaffMember
+
+from users.models import StaffMember, Student
 
 
 class Notification(models.Model):

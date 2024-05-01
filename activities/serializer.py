@@ -50,3 +50,30 @@ class ClinicAttendanceSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'staff_member': {'required': True}
         }
+
+
+class ListOperationAttendanceSerializer(serializers.ModelSerializer):
+    staff_member = SingleStaffMemberSerializer()
+    student = StudentSerializer()
+
+    class Meta:
+        model = OperationAttendance
+        fields = "__all__"
+
+
+class OperationAttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OperationAttendance
+        fields = "__all__"
+
+
+class ListShiftAttendanceSerializer(ListStudentActivitySerializer):
+    class Meta:
+        model = ShiftAttendance
+        fields = "__all__"
+
+
+class ShiftAttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShiftAttendance
+        fields = "__all__"

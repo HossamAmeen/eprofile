@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+
 from notifications.models import ActivityNotification
 from notifications.serializers import ActivityNotificationSerializer
 

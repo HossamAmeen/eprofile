@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer
+
 from notifications.models import ActivityNotification
-from users.serializers import StudentSerializer, StaffMemberSerializer
+from users.serializers import StaffMemberSerializer, StudentSerializer
 
 
 class ActivityNotificationSerializer(ModelSerializer):

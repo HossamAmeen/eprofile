@@ -35,7 +35,10 @@ class ClinicAttendance(StudentActivity):
 
 class OperationAttendance(StudentActivity):
     place = models.CharField(max_length=100)
+    time = models.CharField(max_length=10)
+    procedure = models.CharField(max_length=100)
 
 
 class ShiftAttendance(StudentActivity):
     place = models.CharField(max_length=100)
+    time = models.CharField(max_length=20)
