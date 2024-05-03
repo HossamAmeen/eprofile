@@ -21,6 +21,10 @@ class User(AbstractUser, TimeStampedModel):
             return "student"
         elif hasattr(self, 'staffmember'):
             return "staff_member"
+        elif hasattr(self, 'employee'):
+            return "employee"
+        elif hasattr(self, 'admin'):
+            return "admin"
 
 
 class Admin(User):
