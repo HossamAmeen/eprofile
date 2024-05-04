@@ -26,6 +26,12 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SingleStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id', 'full_name']
+
+
 class StaffMemberSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
