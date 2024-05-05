@@ -1,9 +1,9 @@
 # Django #
 *.log
 *.pot
-delivery/*.pyc
-*.pyc
-__pycache__
+**/*.pyc
+__pycache__/
+
 db.sqlite3
 media
 

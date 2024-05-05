@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-
+from rest_framework.permissions import IsAuthenticated
 from activities.models import (ClinicAttendance, Lecture, OperationAttendance,
                                ShiftAttendance)
 from activities.serializer import (ClinicAttendanceSerializer,
@@ -14,7 +14,7 @@ from notifications.models import ActivityNotification
 
 
 class LectureViewSet(ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     queryset = Lecture.objects.order_by('-id')
     serializer_class = LectureSerializer
 
