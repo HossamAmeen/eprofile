@@ -33,11 +33,13 @@ class Admin(User):
 
 class CompetenceLevel(models.Model):
     name = models.CharField(max_length=10)
+    description = models.TextField()
 
 
 class Student(User):
     birth_of_date = models.DateField()
-    competence_level = models.CharField(max_length=5)
+    competence_level = models.ForeignKey(
+        CompetenceLevel, on_delete=models.SET_NULL, null=True)
 
 
 class StaffMember(User):
