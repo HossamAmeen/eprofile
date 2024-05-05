@@ -2,13 +2,14 @@
 from django.contrib.auth.hashers import make_password
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import Admin, Empolyee, StaffMember, Student, User
 from users.serializers import (AdminSerializer, EmployeeSerializer,
                                StaffMemberSerializer, StudentSerializer,
                                UserSerializer)
-from rest_framework.permissions import IsAuthenticated
+
 
 class UserViewSet(ModelViewSet):
     permission_classes = []

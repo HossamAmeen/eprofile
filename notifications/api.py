@@ -1,5 +1,6 @@
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
+
 from activities.permissions import StaffMemberPermission
 from notifications.models import ActivityNotification
 from notifications.serializers import ActivityNotificationSerializer
