@@ -31,6 +31,10 @@ class Admin(User):
     pass
 
 
+class CompetenceLevel(models.Model):
+    name = models.CharField(max_length=10)
+
+
 class Student(User):
     birth_of_date = models.DateField()
     competence_level = models.CharField(max_length=5)
