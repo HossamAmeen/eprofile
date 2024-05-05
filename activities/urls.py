@@ -1,6 +1,7 @@
 from rest_framework.routers import DefaultRouter
 
-from activities.api import ClinicViewSet, LectureViewSet, ShiftAttendanceViewSet, OperationAttendanceViewSet
+from activities.api import (ClinicViewSet, LectureViewSet,
+                            OperationAttendanceViewSet, ShiftAttendanceViewSet)
 
 router = DefaultRouter()
 
