@@ -1,0 +1,59 @@
+[
+{
+  "model": "users.competencelevel",
+  "pk": 1,
+  "fields": {
+    "name": "R1",
+    "description": "R1"
+  }
+},
+{
+    "model": "users.competencelevel",
+    "pk": 2,
+    "fields": {
+      "name": "R2",
+      "description": "R2"
+    }
+},
+{
+    "model": "users.competencelevel",
+    "pk": 3,
+    "fields": {
+      "name": "R3",
+      "description": "R3"
+    }
+},
+{
+    "model": "users.competencelevel",
+    "pk": 4,
+    "fields": {
+      "name": "R4",
+      "description": "R4"
+    }
+},
+{
+    "model": "users.competencelevel",
+    "pk": 5,
+    "fields": {
+      "name": "R5",
+      "description": "R5"
+    }
+},
+{
+    "model": "users.competencelevel",
+    "pk": 6,
+    "fields": {
+      "name": "R6",
+      "description": "R6"
+    }
+},
+{
+    "model": "users.competencelevel",
+    "pk": 7,
+    "fields": {
+      "name": "R7",
+      "description": "R7"
+    }
+}
+
+]
