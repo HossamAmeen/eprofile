@@ -3,12 +3,12 @@ from rest_framework import serializers
 from activities.models import (ClinicAttendance, Lecture, LectureAttendance,
                                OperationAttendance, ShiftAttendance,
                                StudentActivity)
-from users.serializers import SingleStaffMemberSerializer, StudentSerializer
+from users.serializers import SingleStaffMemberSerializer, SingleStudentSerializer
 
 
 class ListStudentActivitySerializer(serializers.ModelSerializer):
     staff_member = SingleStaffMemberSerializer()
-    student = StudentSerializer()
+    student = SingleStudentSerializer()
 
     class Meta:
         model = StudentActivity
@@ -17,7 +17,7 @@ class ListStudentActivitySerializer(serializers.ModelSerializer):
 
 class ListLectureSerializer(serializers.ModelSerializer):
     staff_member = SingleStaffMemberSerializer()
-    student = StudentSerializer()
+    student = SingleStudentSerializer()
 
     class Meta:
         model = Lecture
@@ -36,7 +36,7 @@ class LectureSerializer(serializers.ModelSerializer):
 
 class ListClinicAttendanceSerializer(ListStudentActivitySerializer):
     staff_member = SingleStaffMemberSerializer()
-    student = StudentSerializer()
+    student = SingleStudentSerializer()
 
     class Meta:
         model = ClinicAttendance
@@ -54,7 +54,7 @@ class ClinicAttendanceSerializer(serializers.ModelSerializer):
 
 class ListOperationAttendanceSerializer(serializers.ModelSerializer):
     staff_member = SingleStaffMemberSerializer()
-    student = StudentSerializer()
+    student = SingleStudentSerializer()
 
     class Meta:
         model = OperationAttendance
