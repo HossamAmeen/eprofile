@@ -46,5 +46,5 @@ class StaffMember(User):
     specialty = models.CharField(max_length=100)
 
 
-class Empolyee(User):
+class Employee(User):
     pass
