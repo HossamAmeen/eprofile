@@ -25,7 +25,14 @@ class LectureViewSet(ModelViewSet):
         return ListLectureSerializer
 
     def perform_create(self, serializer):
-        serializer.save(student_id=self.request.user.id)
+        lecture = serializer.save(student_id=self.request.user.id)
+        ActivityNotification.objects.create(
+            title="title",
+            body="student ask your feedback about clinic attendance",
+            student_id=self.request.user.id,
+            staff_member_id=serializer.validated_data['staff_member'].id,
+            link=f'/panel/lecture/evaluate/{lecture.id}'
+        )
 
 
 class ClinicViewSet(ModelViewSet):
@@ -38,13 +45,13 @@ class ClinicViewSet(ModelViewSet):
         return ListClinicAttendanceSerializer
 
     def perform_create(self, serializer):
-        serializer.save(student_id=self.request.user.id)
+        clinic = serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
             title="title",
             body="student ask your feedback about clinic attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
-            link='clinic/1/'
+            link=f'/panel/clinic/evaluate/{clinic.id}'
         )
 
 
@@ -58,13 +65,13 @@ class ShiftAttendanceViewSet(ModelViewSet):
         return ListShiftAttendanceSerializer
 
     def perform_create(self, serializer):
-        serializer.save(student_id=self.request.user.id)
+        shift = serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
             title="title",
             body="student ask your feedback about shift attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
-            link='clinic/1/'
+            link=f'clinic/{shift.id}'
         )
 
 
@@ -78,11 +85,11 @@ class OperationAttendanceViewSet(ModelViewSet):
         return ListOperationAttendanceSerializer
 
     def perform_create(self, serializer):
-        serializer.save(student_id=self.request.user.id)
+        operation = serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
             title="title",
             body="student ask your feedback about operation attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
-            link='clinic/1/'
+            link=f'/panel/operations/evaluate/{operation.id}'
         )
