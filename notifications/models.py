@@ -1,9 +1,10 @@
 from django.db import models
+from django_extensions.db.models import TimeStampedModel
 
 from users.models import StaffMember, Student
 
 
-class Notification(models.Model):
+class Notification(TimeStampedModel):
     title = models.CharField(max_length=250)
     body = models.TextField()
     link = models.CharField(max_length=250)
