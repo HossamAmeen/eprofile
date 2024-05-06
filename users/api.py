@@ -5,7 +5,7 @@ from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from users.models import Admin, Empolyee, StaffMember, Student, User
+from users.models import Admin, Employee, StaffMember, Student, User
 from users.serializers import (AdminSerializer, EmployeeSerializer,
                                StaffMemberSerializer, StudentSerializer,
                                UserSerializer)
@@ -55,7 +55,7 @@ class StaffMemberViewSet(UserViewSet):
 
 class EmployeeViewSet(UserViewSet):
     permission_classes = []
-    queryset = Empolyee.objects.order_by('-id')
+    queryset = Employee.objects.order_by('-id')
     serializer_class = EmployeeSerializer
 
     def perform_create(self, serializer):

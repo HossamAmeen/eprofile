@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from users.models import (Admin, CompetenceLevel, Empolyee, StaffMember,
+from users.models import (Admin, CompetenceLevel, Employee, StaffMember,
                           Student, User)
 
 
@@ -58,7 +58,7 @@ class EmployeeSerializer(UserSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = Empolyee
+        model = Employee
         fields = "__all__"
 
 

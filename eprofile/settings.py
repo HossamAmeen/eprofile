@@ -45,7 +45,8 @@ INSTALLED_APPS = [
 MODEL_APP = [
     'users',
     'activities',
-    'notifications'
+    'notifications',
+    'landing_page'
 ]
 THIRD_PARTY_APP = [
     'rest_framework',
