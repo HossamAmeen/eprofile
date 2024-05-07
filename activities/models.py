@@ -45,9 +45,10 @@ class ShiftAttendance(StudentActivity):
 
 class Exam(models.Model):
     date = models.DateField()
-    competence_level = models.ForeignKey(CompetenceLevel,on_delete=models.SET_NULL,null=True,blank=True)
+    competence_level = models.ForeignKey(CompetenceLevel, null=True, on_delete=models.SET_NULL)
 
 class ExamScore(models.Model):
     score = models.IntegerField()
-    student = models.ForeignKey(Student,on_delete=models.SET_NULL,null=True,blank=True)
-    exam = models.ForeignKey(Exam,on_delete=models.SET_NULL,null=True,blank=True)    
+    student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
+    exam = models.ForeignKey(Exam, null=True, on_delete=models.SET_NULL)    
+
