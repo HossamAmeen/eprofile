@@ -3,3 +3,4 @@ exclude =
     .git,
     __pycache__,
     migrations,  # Exclude migration files
+    *settings.py,
