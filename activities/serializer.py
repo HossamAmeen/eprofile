@@ -80,15 +80,17 @@ class ShiftAttendanceSerializer(serializers.ModelSerializer):
         model = ShiftAttendance
         fields = "__all__"
 
+
 class ExamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exam
-        fields = '__all__' 
+        fields = '__all__'
+
+
 class ListExamSerializer(serializers.ModelSerializer):
     competence_level = CompetenceLevelSerializer()
+
     class Meta:
         model = Exam
-        fields = '__all__'        
-
-
+        fields = '__all__'
 

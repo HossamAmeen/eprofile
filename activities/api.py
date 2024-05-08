@@ -95,21 +95,25 @@ class OperationAttendanceViewSet(ModelViewSet):
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/operations/evaluate/{operation.id}'
         )
+
+
 class ExamViewSet(ModelViewSet):
     queryset = Exam.objects.all()
     serializer_class = ExamSerializer
     filter_backends = [DjangoFilterBackend]
+
     filterset_fields = ['competence_level']
-    
-    def list(self,request):
+
+    def list(self, request):
         exam = Exam.objects.all()
-        serializer = ListExamSerializer(exam,many=True)
+        serializer = ListExamSerializer(exam, many=True)
         return Response(serializer.data)
-    
-    def create(self,request):
+
+    def create(self, request):
         serializer = ExamSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True) 
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-       
-       
+
+
+
