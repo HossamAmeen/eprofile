@@ -1,11 +1,11 @@
 from rest_framework import serializers
+from users.serializers import (CompetenceLevelSerializer,
+                               SingleStaffMemberSerializer,
+                               SingleStudentSerializer)
 
 from activities.models import (ClinicAttendance, Exam, Lecture,
                                LectureAttendance, OperationAttendance,
                                ShiftAttendance, StudentActivity)
-from users.serializers import (CompetenceLevelSerializer,
-                               SingleStaffMemberSerializer,
-                               SingleStudentSerializer)
 
 
 class ListStudentActivitySerializer(serializers.ModelSerializer):

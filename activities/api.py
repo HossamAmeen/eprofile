@@ -1,19 +1,19 @@
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
+from notifications.models import ActivityNotification
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from activities.models import (ClinicAttendance, Lecture, OperationAttendance,
-                               ShiftAttendance, Exam)
-from activities.serializer import (ClinicAttendanceSerializer,
+from rest_framework.viewsets import ModelViewSet
+
+from activities.models import (ClinicAttendance, Exam, Lecture,
+                               OperationAttendance, ShiftAttendance)
+from activities.serializer import (ClinicAttendanceSerializer, ExamSerializer,
                                    LectureSerializer,
                                    ListClinicAttendanceSerializer,
-                                   ListLectureSerializer,
+                                   ListExamSerializer, ListLectureSerializer,
                                    ListOperationAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
-                                   ShiftAttendanceSerializer,
-                                   ExamSerializer, ListExamSerializer)
-from notifications.models import ActivityNotification
+                                   ShiftAttendanceSerializer)
 
 
 class LectureViewSet(ModelViewSet):
@@ -100,6 +100,7 @@ class ExamViewSet(ModelViewSet):
     serializer_class = ExamSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['competence_level']
+    
     def list(self,request):
         exam = Exam.objects.all()
         serializer = ListExamSerializer(exam,many=True)
@@ -110,5 +111,5 @@ class ExamViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True) 
         serializer.save()
         return Response(serializer.data)
-        # return Response (serializer.errors)
+       
        
