@@ -1,8 +1,9 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 from activities.models import (ClinicAttendance, Lecture, OperationAttendance,
-                               ShiftAttendance)
+                               ShiftAttendance, Exam)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    LectureSerializer,
                                    ListClinicAttendanceSerializer,
@@ -10,7 +11,8 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListOperationAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
-                                   ShiftAttendanceSerializer)
+                                   ShiftAttendanceSerializer,
+                                   ExamSerializer, ListExamSerializer)
 from notifications.models import ActivityNotification
 
 
@@ -93,3 +95,24 @@ class OperationAttendanceViewSet(ModelViewSet):
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/operations/evaluate/{operation.id}'
         )
+class ExamViewSet(ModelViewSet):
+
+
+    queryset = Exam.objects.all()
+    serializer_class = ExamSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['competence_level']
+    def list(self,request):
+        exam = Exam.objects.all()
+        serializer = ListExamSerializer(exam,many=True)
+        filter_backends = [DjangoFilterBackend]
+        filterset_fields = ['competence_level']
+        return Response(serializer.data)
+    
+    def create(self,request):
+        serializer = ExamSerializer(data=request.data)
+        if serializer.is_valid() :
+            serializer.save()
+            return Response(serializer.data)
+        return Response (serializer.errors)
+       
