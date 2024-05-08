@@ -96,8 +96,6 @@ class OperationAttendanceViewSet(ModelViewSet):
             link=f'/panel/operations/evaluate/{operation.id}'
         )
 class ExamViewSet(ModelViewSet):
-
-
     queryset = Exam.objects.all()
     serializer_class = ExamSerializer
     filter_backends = [DjangoFilterBackend]
@@ -105,14 +103,12 @@ class ExamViewSet(ModelViewSet):
     def list(self,request):
         exam = Exam.objects.all()
         serializer = ListExamSerializer(exam,many=True)
-        filter_backends = [DjangoFilterBackend]
-        filterset_fields = ['competence_level']
         return Response(serializer.data)
     
     def create(self,request):
         serializer = ExamSerializer(data=request.data)
-        if serializer.is_valid() :
-            serializer.save()
-            return Response(serializer.data)
-        return Response (serializer.errors)
+        serializer.is_valid(raise_exception=True) 
+        serializer.save()
+        return Response(serializer.data)
+        # return Response (serializer.errors)
        

@@ -84,9 +84,7 @@ class ExamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exam
         fields = '__all__' 
-
 class ListExamSerializer(serializers.ModelSerializer):
-    
     competence_level = CompetenceLevelSerializer()
     class Meta:
         model = Exam
