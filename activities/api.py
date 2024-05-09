@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from notifications.models import ActivityNotification
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, Lecture,
@@ -13,7 +13,6 @@ from activities.serializer import (ClinicAttendanceSerializer, ExamSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer)
-from notifications.models import ActivityNotification
 
 
 class LectureViewSet(ModelViewSet):
@@ -100,21 +99,10 @@ class OperationAttendanceViewSet(ModelViewSet):
 class ExamViewSet(ModelViewSet):
     queryset = Exam.objects.all()
     filter_backends = [DjangoFilterBackend]
-
     filterset_fields = ['competence_level']
 
     def get_serializer_class(self):
-        if self.action == 'list':
-            return ListExamSerializer
+        if self.request.method == "GET":
+         return ListExamSerializer 
         return ExamSerializer
-
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
-
 
