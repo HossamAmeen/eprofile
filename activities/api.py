@@ -1,18 +1,20 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from notifications.models import ActivityNotification
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from activities.models import (ClinicAttendance, Exam, Lecture,
+from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                OperationAttendance, ShiftAttendance)
-from activities.serializer import (ClinicAttendanceSerializer, ExamSerializer,
+from activities.serializer import (ClinicAttendanceSerializer,
+                                   ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
                                    ListClinicAttendanceSerializer,
-                                   ListExamSerializer, ListLectureSerializer,
+                                   ListExamScoreSerializer, ListExamSerializer,
+                                   ListLectureSerializer,
                                    ListOperationAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer)
+from notifications.models import ActivityNotification
 
 
 class LectureViewSet(ModelViewSet):
@@ -106,3 +108,13 @@ class ExamViewSet(ModelViewSet):
          return ListExamSerializer 
         return ExamSerializer
 
+
+class ExamScoreViewSet(ModelViewSet):
+    queryset = ExamScore.objects.all()
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+         return ListExamScoreSerializer
+        return ExamScoreSerializer
+    
+
+ 

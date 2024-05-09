@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import StaffMember, Student, CompetenceLevel
+from users.models import CompetenceLevel, StaffMember, Student
 
 
 class StudentActivity(models.Model):
