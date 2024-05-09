@@ -105,16 +105,15 @@ class ExamViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-         return ListExamSerializer 
+            return ListExamSerializer
         return ExamSerializer
 
 
 class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
-    def get_serializer_class(self):
-        if self.request.method == "GET":
-         return ListExamScoreSerializer
-        return ExamScoreSerializer
-    
 
- 
+    def get_serializer_class(self):
+
+        if self.request.method == "GET":
+            return ListExamScoreSerializer
+        return ExamScoreSerializer
