@@ -1,3 +1,4 @@
+from pyexpat import model
 from rest_framework import serializers
 from users.serializers import (CompetenceLevelSerializer,
                                SingleStaffMemberSerializer,
@@ -5,7 +6,7 @@ from users.serializers import (CompetenceLevelSerializer,
 
 from activities.models import (ClinicAttendance, Exam, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance, StudentActivity)
+                               ShiftAttendance, StudentActivity, ExamScore)
 
 
 class ListStudentActivitySerializer(serializers.ModelSerializer):
@@ -93,4 +94,10 @@ class ListExamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exam
         fields = '__all__'
+
+class ExamScoreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ExamScore
+        fields = '__all__'        
 

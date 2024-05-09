@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, Lecture,
-                               OperationAttendance, ShiftAttendance)
+                               OperationAttendance, ShiftAttendance, ExamScore)
 from activities.serializer import (ClinicAttendanceSerializer, ExamSerializer,
                                    LectureSerializer,
                                    ListClinicAttendanceSerializer,
@@ -12,7 +12,8 @@ from activities.serializer import (ClinicAttendanceSerializer, ExamSerializer,
                                    ListOperationAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
-                                   ShiftAttendanceSerializer)
+                                   ShiftAttendanceSerializer, 
+                                   ExamScoreSerializer)
 
 
 class LectureViewSet(ModelViewSet):
@@ -105,4 +106,8 @@ class ExamViewSet(ModelViewSet):
         if self.request.method == "GET":
          return ListExamSerializer 
         return ExamSerializer
+    
+class ExamScoreViewSet(ModelViewSet):
+    queryset = ExamScore
+    serializer_class = ExamScoreSerializer
 
