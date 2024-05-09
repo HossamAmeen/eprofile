@@ -3,9 +3,12 @@ from users.serializers import (CompetenceLevelSerializer,
                                SingleStaffMemberSerializer,
                                SingleStudentSerializer)
 
-from activities.models import (ClinicAttendance, Exam, Lecture,
-                               LectureAttendance, OperationAttendance,
+
+from activities.models import (ClinicAttendance, Lecture, OperationAttendance,
                                ShiftAttendance, StudentActivity)
+from users.serializers import (SingleStaffMemberSerializer,
+                               SingleStudentSerializer)
+
 
 
 class ListStudentActivitySerializer(serializers.ModelSerializer):
