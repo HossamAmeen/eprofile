@@ -10,4 +10,7 @@ router.register(r'clinics-attendance', ClinicViewSet)
 router.register(r'shifts-attendance', ShiftAttendanceViewSet)
 router.register(r'operations-attendance', OperationAttendanceViewSet)
 
-urlpatterns = router.urls
+
+urlpatterns = [
+    '', router.urls,
+    'studnetactivit/']

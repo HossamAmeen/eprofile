@@ -1,6 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from activities.models import (ClinicAttendance, Lecture, OperationAttendance,
                                ShiftAttendance)
 from activities.serializer import (ClinicAttendanceSerializer,
@@ -93,3 +94,8 @@ class OperationAttendanceViewSet(ModelViewSet):
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/operations/evaluate/{operation.id}'
         )
+
+
+class StudentActivityStatisticAPIView(APIView):
+    def get(self, request):
+        return Response({"test": "test"})
