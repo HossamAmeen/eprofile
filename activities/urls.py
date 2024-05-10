@@ -10,7 +10,7 @@ router.register(r'lectures', LectureViewSet)
 router.register(r'clinics-attendance', ClinicViewSet)
 router.register(r'shifts-attendance', ShiftAttendanceViewSet)
 router.register(r'operations-attendance', OperationAttendanceViewSet)
-router.register(r'exams', ExamViewSet, basename='exam')
-router.register(r'exam-scores', ExamScoreViewSet, basename='examscore')
+router.register(r'exams', ExamViewSet, basename='exams')
+router.register(r'exam-scores', ExamScoreViewSet, basename='exam-scores')
 
 urlpatterns = router.urls

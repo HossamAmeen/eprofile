@@ -113,7 +113,6 @@ class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
 
     def get_serializer_class(self):
-
         if self.request.method == "GET":
             return ListExamScoreSerializer
         return ExamScoreSerializer
