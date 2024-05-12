@@ -12,6 +12,7 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer)
+from users.models import Student
 from notifications.models import ActivityNotification
 
 
@@ -98,4 +99,16 @@ class OperationAttendanceViewSet(ModelViewSet):
 
 class StudentActivityStatisticAPIView(APIView):
     def get(self, request):
-        return Response({"test": "test"})
+        respose_data = {"results": []}
+        for student in Student.objects.order_by('competence_level'):
+            respose_data['results'].append({
+                "student_name": student.full_name,
+                "competence_level": student.competence_level.name,
+                "lecture_counter": 0,
+                "lecture_attendance_count": 0,
+                "shift_count": 0,
+                "clinic_count": 0,
+                "operation_count": 0,
+                "is_passed": True
+                })
+        return Response(respose_data)
