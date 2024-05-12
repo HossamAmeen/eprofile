@@ -1,5 +1,8 @@
+import jwt
+from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
@@ -15,6 +18,7 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer)
 from notifications.models import ActivityNotification
+from users.models import Student
 
 
 class LectureViewSet(ModelViewSet):
@@ -111,6 +115,28 @@ class ExamViewSet(ModelViewSet):
 
 class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+
+        token = request.headers.get('Authorization').split(' ')[1]
+        decoded_token = jwt.decode(token,
+                                   settings.SECRET_KEY, algorithms=['HS256'])
+        user_id_from_token = decoded_token.get('user_id')
+        if user_id_from_token is not None:
+            try:
+                student = Student.objects.get(id=user_id_from_token)
+            except Student.DoesNotExist:
+                pass
+        if student is not None:
+            student_data = {
+                'id': student.id,
+                'username': student.full_name,
+                'email': student.email,
+            }
+            return Response({'user_data': student_data})
+        else:
+            return Response({'error': 'student not found'}, status=404)
 
     def get_serializer_class(self):
         if self.request.method == "GET":
