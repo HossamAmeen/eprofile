@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
-from activities.models import (ClinicAttendance, Lecture, OperationAttendance,
-                               ShiftAttendance, StudentActivity)
-from users.serializers import (SingleStaffMemberSerializer,
+from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
+                               OperationAttendance, ShiftAttendance,
+                               StudentActivity)
+from users.serializers import (CompetenceLevelSerializer,
+                               SingleStaffMemberSerializer,
                                SingleStudentSerializer)
 
 
@@ -77,3 +79,33 @@ class ShiftAttendanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShiftAttendance
         fields = "__all__"
+
+
+class ExamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = '__all__'
+
+
+class ListExamSerializer(serializers.ModelSerializer):
+    competence_level = CompetenceLevelSerializer()
+
+    class Meta:
+        model = Exam
+        fields = '__all__'
+
+
+class ExamScoreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ExamScore
+        fields = '__all__'
+
+
+class ListExamScoreSerializer(serializers.ModelSerializer):
+    exam = ExamSerializer()
+    student = SingleStudentSerializer()
+
+    class Meta:
+        model = ExamScore
+        fields = '__all__'

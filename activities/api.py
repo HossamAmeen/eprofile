@@ -1,19 +1,23 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from activities.models import (ClinicAttendance, Lecture, OperationAttendance,
-                               ShiftAttendance)
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+
+from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
+                               OperationAttendance, ShiftAttendance)
 from activities.serializer import (ClinicAttendanceSerializer,
+                                   ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
                                    ListClinicAttendanceSerializer,
+                                   ListExamScoreSerializer, ListExamSerializer,
                                    ListLectureSerializer,
                                    ListOperationAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer)
-from users.models import Student
 from notifications.models import ActivityNotification
+from users.models import Student
 
 
 class LectureViewSet(ModelViewSet):
@@ -112,3 +116,23 @@ class StudentActivityStatisticAPIView(APIView):
                 "is_passed": True
                 })
         return Response(respose_data)
+
+
+class ExamViewSet(ModelViewSet):
+    queryset = Exam.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['competence_level']
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ListExamSerializer
+        return ExamSerializer
+
+
+class ExamScoreViewSet(ModelViewSet):
+    queryset = ExamScore.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ListExamScoreSerializer
+        return ExamScoreSerializer

@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import StaffMember, Student, CompetenceLevel
+from users.models import CompetenceLevel, StaffMember, Student
 
 
 class StudentActivity(models.Model):
@@ -46,7 +46,8 @@ class ShiftAttendance(StudentActivity):
 
 class Exam(models.Model):
     date = models.DateField()
-    competence_level = models.ForeignKey(CompetenceLevel, null=True, on_delete=models.SET_NULL)
+    competence_level = models.ForeignKey(CompetenceLevel,
+                                         null=True, on_delete=models.SET_NULL)
 
 
 class ExamScore(models.Model):
