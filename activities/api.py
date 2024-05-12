@@ -1,5 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
@@ -15,6 +17,7 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer)
 from notifications.models import ActivityNotification
+from users.models import Student
 
 
 class LectureViewSet(ModelViewSet):
@@ -96,6 +99,23 @@ class OperationAttendanceViewSet(ModelViewSet):
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/operations/evaluate/{operation.id}'
         )
+
+
+class StudentActivityStatisticAPIView(APIView):
+    def get(self, request):
+        respose_data = {"results": []}
+        for student in Student.objects.order_by('competence_level'):
+            respose_data['results'].append({
+                "student_name": student.full_name,
+                "competence_level": student.competence_level.name,
+                "lecture_counter": 0,
+                "lecture_attendance_count": 0,
+                "shift_count": 0,
+                "clinic_count": 0,
+                "operation_count": 0,
+                "is_passed": True
+                })
+        return Response(respose_data)
 
 
 class ExamViewSet(ModelViewSet):

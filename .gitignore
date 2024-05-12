@@ -4,8 +4,8 @@
 
 *.py[cod]
 __pycache__
-.cache
-
+*.cache
+*.pyc
 
 db.sqlite3
 media
