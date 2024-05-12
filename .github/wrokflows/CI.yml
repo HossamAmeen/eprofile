@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  pill_request:
+  pull_request:
     branchs: ["master"]
 
 jobs:
