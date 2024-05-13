@@ -22,6 +22,7 @@ jobs:
         flake8
     - name: run isort
       run: |
+        pwd
         isort .
     - name: run tests
       run: |
