@@ -23,6 +23,7 @@ jobs:
     - name: run isort
       run: |
         pwd
+        ls
         isort .
     - name: run tests
       run: |
