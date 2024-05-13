@@ -52,7 +52,8 @@ THIRD_PARTY_APP = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'django_extensions'
+    'django_extensions',
+    'django_filters',
 ]
 
 INSTALLED_APPS = INSTALLED_APPS + MODEL_APP + THIRD_PARTY_APP

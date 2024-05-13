@@ -35,7 +35,7 @@ class StudentViewSet(ModelViewSet):
     permission_classes = []
     queryset = Student.objects.order_by('-id')
     serializer_class = StudentSerializer
-    filterset_fields = ['competence_level']
+    filterset_fields = ['competence_level', 'email', 'full_name', 'phone']
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
 
     def perform_create(self, serializer):

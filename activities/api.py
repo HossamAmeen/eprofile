@@ -1,4 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -131,6 +132,8 @@ class ExamViewSet(ModelViewSet):
 
 class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['exam_id']
 
     def get_serializer_class(self):
         if self.request.method == "GET":

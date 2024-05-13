@@ -1,0 +1,38 @@
+[
+    {
+        "model":"users.Student",
+        "pk":1,
+        "fields" :{
+            "full_name": "safaa",
+            "email": "safaa@gmail.com",
+            "phone": "01012070620",
+            "birth_of_date": "1999-09-02",
+            "competence_level": 1,
+            "password": "admin"
+        }
+    },
+    {
+        "model":"users.Student",
+        "pk":2,
+        "fields" :{
+            "full_name": "student1",
+            "email": "student1@gmail.com",
+            "phone": "01102015693",
+            "birth_of_date": "1999-08-27",
+            "competence_level": 2,
+            "password": "admin"
+        }
+    },
+    {
+        "model":"users.Student",
+        "pk":3,
+        "fields" :{
+            "full_name": "student2",
+            "email": "student2@gmail.com",
+            "phone": "01102252255",
+            "birth_of_date": "1999-01-01",
+            "competence_level": 2,
+            "password": "admin"
+        }
+    }
+]
