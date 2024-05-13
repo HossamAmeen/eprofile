@@ -133,7 +133,7 @@ class ExamViewSet(ModelViewSet):
 class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['exam_id']
+    filterset_fields = ['exam']
 
     def get_serializer_class(self):
         if self.request.method == "GET":
