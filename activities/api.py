@@ -19,7 +19,6 @@ from activities.serializer import (ClinicAttendanceSerializer,
 from notifications.models import ActivityNotification
 from users.models import Student
 
-
 class LectureViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Lecture.objects.order_by('-id')
