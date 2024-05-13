@@ -3,7 +3,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from users.models import Student
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                OperationAttendance, ShiftAttendance)
@@ -18,6 +17,7 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer)
 from notifications.models import ActivityNotification
+from users.models import Student
 
 
 class LectureViewSet(ModelViewSet):

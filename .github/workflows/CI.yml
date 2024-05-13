@@ -20,11 +20,7 @@ jobs:
     - name: run flake and isort
       run: |
         flake8
-    - name: run isort
-      run: |
-        pwd
-        ls
-        isort .
+        isort . --diff
     - name: run tests
       run: |
         python manage.py test
