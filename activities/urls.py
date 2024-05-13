@@ -18,5 +18,7 @@ router.register(r'exam-scores', ExamScoreViewSet, basename='exam-scores')
 
 urlpatterns = router.urls
 urlpatterns += [
-    path('student-statistics/', StudentActivityStatisticAPIView.as_view())
+    path('student-statistics/', StudentActivityStatisticAPIView.as_view()),
+    path('update/exam-score/', ExamScoreViewSet.as_view(
+        {"patch": "bulk_update"}))
 ]
