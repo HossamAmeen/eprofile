@@ -20,6 +20,8 @@ jobs:
     - name: run flake and isort
       run: |
         flake8
+    - name: run isort
+      run: |
         isort .
     - name: run tests
       run: |
