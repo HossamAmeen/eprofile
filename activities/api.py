@@ -18,6 +18,7 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ShiftAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
+from rest_framework.validators import ValidationError
 
 
 class LectureViewSet(ModelViewSet):
@@ -136,3 +137,16 @@ class ExamScoreViewSet(ModelViewSet):
         if self.request.method == "GET":
             return ListExamScoreSerializer
         return ExamScoreSerializer
+
+    def bulk_update(self, request):
+        for request_item in request.data:
+            instance = ExamScore.objects.filter(id=request_item['id']).first()
+            if not instance:
+                raise ValidationError({"message": "this id not found"})
+            update_data = {"score": request_item['score']}
+            serializer = self.get_serializer(
+                instance, data=update_data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+        return Response({"message": "updated sucessfully"})
