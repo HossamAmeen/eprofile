@@ -20,7 +20,7 @@ jobs:
           
       - name: connect and pull
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/eprofile/ && git pull && docker compose up --build -d && exit"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.bashrc && deploy-backend && exit"
           echo "Successfully connection"
       - name: cleanup
         run: rm -rf ~/.ssh
