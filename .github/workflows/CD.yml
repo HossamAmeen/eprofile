@@ -21,6 +21,6 @@ jobs:
       - name: connect and pull
         run: |
           echo ${{ secrets.SSH_USER }} - ${{ secrets.SSH_HOST }}
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "deploy-backend && exit"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
       - name: cleanup
         run: rm -rf ~/.ssh
