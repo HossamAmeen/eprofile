@@ -17,10 +17,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements/requirements.txt
         pip install -r requirements/test_requirements.txt
-    - name: run flake and isort
-      run: |
-        flake8
-        isort . --check --diff
+    - name: run flake8
+      run: flake8
+    - name: isort
+      run: isort . --check --diff
     - name: run tests
       run: |
         python manage.py test
