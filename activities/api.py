@@ -132,6 +132,8 @@ class ExamViewSet(ModelViewSet):
 
 class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['exam']
 
     def get_serializer_class(self):
         if self.request.method == "GET":
