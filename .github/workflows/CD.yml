@@ -3,7 +3,8 @@ name: CD
 on:
     push:
       branches:
-        - main
+      - master
+    workflow_dispatch:
 
 jobs:
     deploy:
@@ -15,8 +16,11 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "deploy-backend && exit"
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/eprofile/ && git pull && docker compose up --build -d && exit"
+          echo "Successfully connection"
       - name: cleanup
         run: rm -rf ~/.ssh
