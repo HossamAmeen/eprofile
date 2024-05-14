@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework import filters
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                OperationAttendance, ShiftAttendance)
@@ -132,8 +133,11 @@ class ExamViewSet(ModelViewSet):
 
 class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['exam']
+    search_fields = ['student__full_name']
+  
+
 
     def get_serializer_class(self):
         if self.request.method == "GET":
