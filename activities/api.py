@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
@@ -18,7 +19,6 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ShiftAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
-from rest_framework.validators import ValidationError
 
 
 class LectureViewSet(ModelViewSet):
@@ -132,6 +132,8 @@ class ExamViewSet(ModelViewSet):
 
 class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['exam']
 
     def get_serializer_class(self):
         if self.request.method == "GET":
