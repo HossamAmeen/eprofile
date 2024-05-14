@@ -3,7 +3,7 @@ name: CD
 on:
     push:
       branches:
-      - dev
+      - master
     workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: connect and pull
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.bashrc && deploy-backend && exit"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/eprofile/ && git pull && docker compose up --build -d && exit"
           echo "Successfully connection"
       - name: cleanup
         run: rm -rf ~/.ssh
