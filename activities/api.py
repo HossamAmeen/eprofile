@@ -1,12 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from notifications.models import ActivityNotification
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from users.models import Student
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                OperationAttendance, ShiftAttendance)
@@ -20,6 +18,8 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer)
+from notifications.models import ActivityNotification
+from users.models import Student
 
 
 class LectureViewSet(ModelViewSet):
