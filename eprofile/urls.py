@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
 
 
 def health(request):
-    return HttpResponse(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    return HttpResponse("test5")
 
 
 urlpatterns = [
