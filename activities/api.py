@@ -163,7 +163,6 @@ class LectureAttendanceViewSet(ModelViewSet):
     queryset = LectureAttendance.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['lecture', 'student']
-    
 
     def get_serializer_class(self):
         if self.request.method == "GET":
