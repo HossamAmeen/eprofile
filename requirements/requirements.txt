@@ -11,3 +11,6 @@ daphne==4.0.0
 
 # for auth
 djangorestframework-simplejwt==5.3.1
+
+# for env
+python-dotenv==1.0.1
