@@ -14,7 +14,7 @@ router.register(r'shifts-attendance', ShiftAttendanceViewSet)
 router.register(r'operations-attendance', OperationAttendanceViewSet)
 router.register(r'exams', ExamViewSet, basename='exams')
 router.register(r'exam-scores', ExamScoreViewSet, basename='exam-scores')
-router.register(r'lecture-attendance', LectureAttendanceViewSet,
+router.register(r'lecture-attendances', LectureAttendanceViewSet,
                 basename='lecture-attendance')
 
 
