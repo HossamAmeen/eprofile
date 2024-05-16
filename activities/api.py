@@ -7,17 +7,20 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
-                               OperationAttendance, ShiftAttendance)
+                               LectureAttendance, OperationAttendance,
+                               ShiftAttendance)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
                                    ListClinicAttendanceSerializer,
                                    ListExamScoreSerializer, ListExamSerializer,
+                                   ListlectureAttendanceSerializer,
                                    ListLectureSerializer,
                                    ListOperationAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
-                                   ShiftAttendanceSerializer)
+                                   ShiftAttendanceSerializer,
+                                   lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
 
@@ -154,3 +157,12 @@ class ExamScoreViewSet(ModelViewSet):
             serializer.save()
 
         return Response({"message": "updated sucessfully"})
+
+
+class LectureAttendanceViewSet(ModelViewSet):
+    queryset = LectureAttendance.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ListlectureAttendanceSerializer
+        return lectureAttendanceSerializer
