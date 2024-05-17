@@ -1,5 +1,6 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+
 from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
                             LectureViewSet, OperationAttendanceViewSet,
                             ShiftAttendanceViewSet,
