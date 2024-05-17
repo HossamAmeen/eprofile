@@ -17,6 +17,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements/requirements.txt
         pip install -r requirements/test_requirements.txt
+        echo "DEBUG=True" > .env
+        echo 'SECRET_KEY="django-insecure-+^)%!%ul90k+-0mhgt=q@b+6=lf=%ktjiaag&s3txl9el_4z!o"' >> .env
     - name: run flake8
       run: flake8
     - name: isort

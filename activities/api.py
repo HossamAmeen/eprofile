@@ -107,9 +107,16 @@ class OperationAttendanceViewSet(ModelViewSet):
 
 
 class StudentActivityStatisticAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
+        students = Student.objects.order_by('competence_level')
+
+        if request.user.get_role() == "student":
+            students = students.filter(id=request.user.pk)
+
         respose_data = {"results": []}
-        for student in Student.objects.order_by('competence_level'):
+        for student in students:
             respose_data['results'].append({
                 "student_name": student.full_name,
                 "competence_level": student.competence_level.name,
