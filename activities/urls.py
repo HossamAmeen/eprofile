@@ -1,10 +1,11 @@
 from django.urls import path
-from .api_statices import calculate_statistics
 from rest_framework.routers import DefaultRouter
 from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
                             LectureViewSet, OperationAttendanceViewSet,
                             ShiftAttendanceViewSet,
                             StudentActivityStatisticAPIView)
+
+from .api_statices import calculate_statistics
 
 router = DefaultRouter()
 
