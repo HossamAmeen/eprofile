@@ -20,7 +20,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: connect and pull
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/eprofile/ && git pull && echo "DEBUG=True" > .env && echo "SECRET_KEY='${{secrets.django_sercret_key}}'" >> .env && docker compose up --build -d && exit"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/eprofile/ && git pull && echo "DEBUG=True" > .env && echo "SECRET_KEY=${{secrets.django_sercret_key}}" >> .env && docker compose up --build -d && exit"
           echo "Successfully connection"
       - name: cleanup
         run: rm -rf ~/.ssh
