@@ -34,6 +34,9 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class ListStudentSerialzier(serializers.ModelSerializer):
+    competence_level = CompetenceLevelSerializer()
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = Student
         fields = "__all__"
