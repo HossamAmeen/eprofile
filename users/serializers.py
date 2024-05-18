@@ -33,6 +33,12 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ListStudentSerialzier(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = "__all__"
+
+
 class SingleStudentSerializer(serializers.ModelSerializer):
     competence_level = CompetenceLevelSerializer()
 
