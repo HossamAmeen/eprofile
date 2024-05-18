@@ -125,6 +125,7 @@ class StudentActivityStatisticAPIView(APIView):
                 "shift_count": 0,
                 "clinic_count": 0,
                 "operation_count": 0,
+                "total_score": 55,
                 "is_passed": True
                 })
         return Response(respose_data)
