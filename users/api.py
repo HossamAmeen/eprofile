@@ -1,14 +1,20 @@
 
+import random
+import string
+from datetime import datetime, timedelta
+
 from django.contrib.auth.hashers import make_password
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from users.models import Admin, Employee, StaffMember, Student, User
-from users.serializers import (AdminSerializer, EmployeeSerializer, ListStudentSerialzier,
-                               StaffMemberSerializer, StudentSerializer,
-                               UserSerializer)
+from users.models import Admin, Employee, StaffMember, Student, User, UserToken
+from users.serializers import (AdminSerializer, EmployeeSerializer,
+                               ListStudentSerialzier, StaffMemberSerializer,
+                               StudentSerializer, UserSerializer)
 
 
 class UserViewSet(ModelViewSet):
@@ -66,3 +72,28 @@ class EmployeeViewSet(UserViewSet):
     def perform_create(self, serializer):
         serializer.save(password=make_password(
             serializer.validated_data['password']))
+
+
+class Check_Email(APIView):
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': 'Email is required.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        if email:
+            token = ''.join(random.choices(
+                string.ascii_letters + string.digits, k=10))
+            expirationdate = datetime.now() + timedelta(hours=24)
+            user = User.objects.get(email=email)
+            usertoken = UserToken.objects.create(
+                                                 user=user,
+                                                 code=token,
+                                                 expirationdate=expirationdate
+                                                 )
+
+            return Response({'exists': email, 'token': token},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({'exists': False},
+                            status=status.HTTP_404_NOT_FOUND)

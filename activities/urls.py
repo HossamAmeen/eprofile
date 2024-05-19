@@ -21,6 +21,6 @@ router.register(r'lecture-attendances', LectureAttendanceViewSet,
 urlpatterns = router.urls
 urlpatterns += [
     path('student-statistics/', StudentActivityStatisticAPIView.as_view()),
-    path('update/exam-score/', ExamScoreViewSet.as_view(
-        {"patch": "bulk_update"}))
+    path('update/exam-score/',
+         ExamScoreViewSet.as_view({"patch": "bulk_update"})),
 ]

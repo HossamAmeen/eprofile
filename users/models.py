@@ -50,7 +50,7 @@ class Employee(User):
     pass
 
 
-class Otp(TimeStampedModel):
-    code = models.CharField(max_length=10)
-    expiration_date = models.DateTimeField()
+class UserToken(TimeStampedModel):
+    code = models.CharField(max_length=255)
+    expirationdate = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
