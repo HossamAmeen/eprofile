@@ -136,6 +136,11 @@ class ExamViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['competence_level']
 
+    def get_queryset(self):
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        return self.queryset
+
     def get_serializer_class(self):
         if self.request.method == "GET":
             return ListExamSerializer
