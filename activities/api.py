@@ -1,5 +1,6 @@
+from django.db.models import Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
@@ -8,7 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance)
+                               ShiftAttendance, StaffMember)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
@@ -136,6 +137,11 @@ class ExamViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['competence_level']
 
+    def get_queryset(self):
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        return self.queryset
+
     def get_serializer_class(self):
         if self.request.method == "GET":
             return ListExamSerializer
@@ -147,6 +153,11 @@ class ExamScoreViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['exam']
     search_fields = ['student__full_name']
+
+    def get_queryset(self):
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        return self.queryset
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -168,6 +179,12 @@ class ExamScoreViewSet(ModelViewSet):
 
 
 class LectureAttendanceViewSet(ModelViewSet):
+
+    def get_queryset(self):
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        return self.queryset
+
     queryset = LectureAttendance.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['lecture', 'student']
@@ -176,3 +193,21 @@ class LectureAttendanceViewSet(ModelViewSet):
         if self.request.method == "GET":
             return ListlectureAttendanceSerializer
         return lectureAttendanceSerializer
+
+
+class CalculateStatisticsAPIView(APIView):
+
+    def get(self, request):
+        staff_members = StaffMember.objects.annotate(
+            action_nums=Count('studentactivity', filter=~Q
+                              (studentactivity__approve_status='pending')))
+
+        response_data = [
+            {
+                'staff_member_id': staff_member.id,
+                'staff_member_name': staff_member.full_name,
+                'action_nums': staff_member.action_nums
+            }
+            for staff_member in staff_members
+        ]
+        return Response(response_data, status=status.HTTP_200_OK)
