@@ -6,8 +6,6 @@ from activities.permissions import StaffMemberPermission
 from notifications.models import ActivityNotification
 from notifications.serializers import ActivityNotificationSerializer
 
-# HADYYF premmission ll student
-
 
 class ActivityNotificationViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, StaffMemberPermission]
