@@ -126,6 +126,7 @@ class StudentActivityStatisticAPIView(APIView):
                 "shift_count": 0,
                 "clinic_count": 0,
                 "operation_count": 0,
+                "total_score": 55,
                 "is_passed": True
                 })
         return Response(respose_data)
@@ -197,9 +198,9 @@ class CalculateStatisticsAPIView(APIView):
 
     def get(self, request):
         staff_members = StaffMember.objects.annotate(
-            action_nums=Count('studentactivity', filter=~Q
-                              (studentactivity__approve_status='pending')))
-
+            action_nums=Count('studentactivity', filter=~Q(
+                studentactivity__approve_status='pending'
+                ))).order_by('action_nums')
         response_data = [
             {
                 'staff_member_id': staff_member.id,
