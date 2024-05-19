@@ -7,8 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from users.models import Admin, Employee, StaffMember, Student, User
 from users.serializers import (AdminSerializer, EmployeeSerializer,
-                               StaffMemberSerializer, StudentSerializer,
-                               UserSerializer)
+                               ListStudentSerialzier, StaffMemberSerializer,
+                               StudentSerializer, UserSerializer)
 
 
 class UserViewSet(ModelViewSet):
@@ -37,6 +37,11 @@ class StudentViewSet(ModelViewSet):
     serializer_class = StudentSerializer
     filterset_fields = ['competence_level']
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ListStudentSerialzier
+        return StudentSerializer
 
     def perform_create(self, serializer):
         serializer.save(password=make_password(
