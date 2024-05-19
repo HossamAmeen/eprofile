@@ -6,9 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import Admin, Employee, StaffMember, Student, User
-from users.serializers import (AdminSerializer, EmployeeSerializer, ListStudentSerialzier,
-                               StaffMemberSerializer, StudentSerializer,
-                               UserSerializer)
+from users.serializers import (AdminSerializer, EmployeeSerializer,
+                               ListStudentSerialzier, StaffMemberSerializer,
+                               StudentSerializer, UserSerializer)
 
 
 class UserViewSet(ModelViewSet):
