@@ -150,7 +150,7 @@ class ExamScoreViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
-            return self.queryset.filter(student=self.request.user.id).order_by()
+            return self.queryset.filter(student=self.request.user.id)
         return self.queryset
 
     def get_serializer_class(self):
