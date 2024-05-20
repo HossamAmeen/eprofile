@@ -145,10 +145,10 @@ class ExamViewSet(ModelViewSet):
         return ExamSerializer
 
     def perform_create(self, serializer):
-        exam = serializer.save(student_id=self.request.user.id)
+        exam = serializer.save()
         for student in Student.objects.filter(
-                competence_level=exam.student.competence_level):
-            ExamScore.objects.create(exam=exam, student=student)
+                competence_level=exam.competence_level):
+            ExamScore.objects.create(exam=exam, student=student, score=0)
 
 
 class ExamScoreViewSet(ModelViewSet):
