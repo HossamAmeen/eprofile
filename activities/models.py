@@ -18,6 +18,8 @@ class StudentActivity(models.Model):
     staff_member = models.ForeignKey(StaffMember, null=True,
                                      on_delete=models.SET_NULL)
     student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
+    score_image = models.TextField(null=True, blank=True)
+    score_image_2 = models.TextField(null=True, blank=True)
 
 
 class Lecture(StudentActivity):
