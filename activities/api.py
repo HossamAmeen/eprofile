@@ -38,12 +38,15 @@ class LectureViewSet(ModelViewSet):
     def perform_create(self, serializer):
         lecture = serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
-            title="title",
-            body="student ask your feedback about clinic attendance",
+            title="lecture approval",
+            body="student ask your approval about clinic attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/lecture/evaluate/{lecture.id}'
         )
+        for student in Student.objects.filter(
+                competence_level=lecture.student.competence_level):
+            LectureAttendance.objects.create(lecture=lecture, student=student)
 
 
 class ClinicViewSet(ModelViewSet):
@@ -58,8 +61,8 @@ class ClinicViewSet(ModelViewSet):
     def perform_create(self, serializer):
         clinic = serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
-            title="title",
-            body="student ask your feedback about clinic attendance",
+            title="clinic approval",
+            body="student ask your approval about clinic attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/clinic/evaluate/{clinic.id}'
@@ -78,8 +81,8 @@ class ShiftAttendanceViewSet(ModelViewSet):
     def perform_create(self, serializer):
         shift = serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
-            title="title",
-            body="student ask your feedback about shift attendance",
+            title="Shift approval",
+            body="student ask your approval about shift attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'clinic/{shift.id}'
@@ -98,8 +101,8 @@ class OperationAttendanceViewSet(ModelViewSet):
     def perform_create(self, serializer):
         operation = serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
-            title="title",
-            body="student ask your feedback about operation attendance",
+            title="Operation approval",
+            body="student ask your approval about operation attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/operations/evaluate/{operation.id}'
@@ -140,6 +143,12 @@ class ExamViewSet(ModelViewSet):
         if self.request.method == "GET":
             return ListExamSerializer
         return ExamSerializer
+
+    def perform_create(self, serializer):
+        exam = serializer.save(student_id=self.request.user.id)
+        for student in Student.objects.filter(
+                competence_level=exam.student.competence_level):
+            ExamScore.objects.create(exam=exam, student=student)
 
 
 class ExamScoreViewSet(ModelViewSet):
