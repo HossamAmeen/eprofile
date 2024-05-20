@@ -1,7 +1,0 @@
-1- send mails(smtplib -Yagmail )
-2- premission(/admin/auth/group/add)
-check if its user model has relation with the wanted model as 
-for ex:
-USER (we want to checkthen search for its relation with the student model)
-5-migration file 
-6- flake8
