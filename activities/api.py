@@ -178,15 +178,14 @@ class ExamScoreViewSet(ModelViewSet):
 
 
 class LectureAttendanceViewSet(ModelViewSet):
+    queryset = LectureAttendance.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['lecture', 'student']
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
         return self.queryset
-
-    queryset = LectureAttendance.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['lecture', 'student']
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -197,16 +196,35 @@ class LectureAttendanceViewSet(ModelViewSet):
 class CalculateStatisticsAPIView(APIView):
 
     def get(self, request):
-        staff_members = StaffMember.objects.annotate(
-            action_nums=Count('studentactivity', filter=~Q
-                              (studentactivity__approve_status='pending')))
+        
+        staff_members_counts = StaffMember.objects.annotate(
+            action_nums=Count(
+                'studentactivity',
+                filter=Q(studentactivity__approve_status='pending')
+            ),
+            clinic_count=Count(
+                'studentactivity__clinicattendance',
+                filter=Q(studentactivity__clinicattendance__approve_status='pending')
+            ),
+            operation_count=Count(
+                'studentactivity__operationattendance',
+                filter=Q(studentactivity__operationattendance__approve_status='pending')
+            ),
+            shift_count=Count(
+                'studentactivity__shiftattendance',
+                filter=Q(studentactivity__shiftattendance__approve_status='pending')
+            )
+        )
 
         response_data = [
             {
                 'staff_member_id': staff_member.id,
                 'staff_member_name': staff_member.full_name,
-                'action_nums': staff_member.action_nums
+                'action_nums': staff_member.action_nums,
+                'clinic_count': staff_member.clinic_count,
+                'operation_count': staff_member.operation_count,
+                'shift_count': staff_member.shift_count
             }
-            for staff_member in staff_members
+            for staff_member in staff_members_counts
         ]
         return Response(response_data, status=status.HTTP_200_OK)
