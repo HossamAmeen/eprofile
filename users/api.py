@@ -89,7 +89,8 @@ class RequestPasswordReset(generics.GenericAPIView):
             token_generator = PasswordResetTokenGenerator()
             token = token_generator.make_token(user)
             timezone = pytz.timezone('UTC')
-            expiration_date = timezone.localize(datetime.now() + timedelta(hours=24))
+            expiration_date = timezone.localize(datetime.now() +
+                                                timedelta(hours=24))
 
             reset = PasswordReset(email=email,
                                   token=token, expiration_date=expiration_date)

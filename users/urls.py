@@ -12,7 +12,7 @@ router.register(r'employees', EmployeeViewSet)
 
 urlpatterns = router.urls
 
-urlpatterns = [
+urlpatterns += [
     path('rest-password/<str:token>/', ResetPassword.as_view()),
     path('request-password-reset/', RequestPasswordReset.as_view())
 ]
