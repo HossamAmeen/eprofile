@@ -1,138 +1,103 @@
 [
-  {
-    "model": "users.User",
-    "pk": 1,
-    "fields": {
-      "full_name": "User",
-      "phone": "01010079798",
-      "email": "user@gmail.com",
-      "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
-      "is_active": "True",
-      "created": "2024-01-06 00:00:00",
-      "modified": "2024-01-06 00:00:00"
-    }
-  },
-  {
-    "model": "users.User",
-    "pk": 2,
-    "fields": {
-      "full_name": "Admin",
-      "phone": "01010079799",
-      "email": "admin@gmail.com",
-      "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
-      "is_active": "True",
-      "created": "2024-01-06 00:00:00",
-      "modified": "2024-01-06 00:00:00"
-    }
-  },
-  {
-    "model": "users.Admin",
-    "pk": 2,
-    "fields": {
-      "user_ptr_id": 2
-    }
-  },
-  {
-    "model": "users.User",
-    "pk": 3,
-    "fields": {
-      "full_name": "Staff",
-      "phone": "01010079999",
-      "email": "staff_member@gmail.com",
-      "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
-      "is_active": "True",
-      "created": "2024-01-06 00:00:00",
-      "modified": "2024-01-06 00:00:00"
-    }
-  },
-  {
-    "model": "users.StaffMember",
-    "pk": 3,
-    "fields": {
-      "specialty": "woman",
-      "user_ptr_id": 3
-    }
-  },
-  {
-    "model": "users.StaffMember",
-    "pk": 4,
-    "fields": {
-      "specialty": "pediatrics",
-      "user_ptr_id": 4
-    }
-  },
-  {
-    "model": "users.StaffMember",
-    "pk": 5,
-    "fields": {
-      "specialty": "cardiology",
-      "user_ptr_id": 5
-    }
-  },
-  {
-    "model": "users.StaffMember",
-    "pk": 9,
-    "fields": {
-      "specialty": "orthopedics",
-      "user_ptr_id": 4
-    }
-  },
-  {
-    "model": "users.StaffMember",
-    "pk": 7,
-    "fields": {
-      "specialty": "neurology",
-      "user_ptr_id": 2
-    }
-  },
-  {
-    "model": "users.StaffMember",
-    "pk": 8,
-    "fields": {
-      "specialty": "dermatology",
-      "user_ptr_id": 3
-    }
-  },
-  {
-    "model": "users.User",
-    "pk": 4,
-    "fields": {
-      "full_name": "Student",
-      "phone": "01010099799",
-      "email": "student@gmail.com",
-      "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
-      "is_active": "True",
-      "created": "2024-01-06 00:00:00",
-      "modified": "2024-01-06 00:00:00"
-    }
-  },
-  {
-    "model": "users.Student",
-    "pk": 4,
-    "fields": {
-      "user_ptr_id": 4,
-      "birth_of_date": "1997-02-03",
-      "competence_level": 1
-    }
-  },
-  {
-    "model": "users.User",
-    "pk": 5,
-    "fields": {
-      "full_name": "Employee",
-      "phone": "01010979799",
-      "email": "employee@gmail.com",
-      "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
-      "is_active": "True",
-      "created": "2024-01-06 00:00:00",
-      "modified": "2024-01-06 00:00:00"
-    }
-  },
-  {
-    "model": "users.Employee",
-    "pk": 5,
-    "fields": {
-      "user_ptr_id": 5
-    }
+{
+  "model": "users.User",
+  "pk": 1,
+  "fields": {
+    "full_name": "User",
+    "phone": "01010079798",
+    "email": "user@gmail.com",
+    "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
+    "is_active": "True",
+    "created": "2024-01-06 00:00:00",
+    "modified": "2024-01-06 00:00:00"
   }
+},
+{
+  "model": "users.User",
+  "pk": 2,
+  "fields": {
+    "full_name": "Admin",
+    "phone": "01010079799",
+    "email": "admin@gmail.com",
+    "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
+    "is_active": "True",
+    "created": "2024-01-06 00:00:00",
+    "modified": "2024-01-06 00:00:00"
+  }
+},
+{
+  "model": "users.Admin",
+  "pk": 2,
+  "fields": {
+    "user_ptr_id":2
+  }
+},
+
+{
+  "model": "users.User",
+  "pk": 3,
+  "fields": {
+    "full_name": "Staff",
+    "phone": "01010079999",
+    "email": "staff_member@gmail.com",
+    "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
+    "is_active": "True",
+    "created": "2024-01-06 00:00:00",
+    "modified": "2024-01-06 00:00:00"
+  }
+},
+{
+  "model": "users.StaffMember",
+  "pk": 3,
+  "fields": {
+    "specialty": "womman",
+    "user_ptr_id":3
+  }
+},
+
+{
+  "model": "users.User",
+  "pk": 4,
+  "fields": {
+    "full_name": "Student",
+    "phone": "01010099799",
+    "email": "student@gmail.com",
+    "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
+    "is_active": "True",
+    "created": "2024-01-06 00:00:00",
+    "modified": "2024-01-06 00:00:00"
+  }
+},
+{
+  "model": "users.Student",
+  "pk": 4,
+  "fields": {
+    "user_ptr_id":4,
+    "birth_of_date": "1997-02-03",
+    "competence_level": 1
+  }
+},
+
+{
+  "model": "users.User",
+  "pk": 5,
+  "fields": {
+    "full_name": "Employee",
+    "phone": "01010979799",
+    "email": "employee@gmail.com",
+    "password": "pbkdf2_sha256$720000$zmiYiaMDuC7ZqPPWPvGgwX$mwnFJ34ikBapAoXeGQP+7S6PvDtJ7lE9oQ9Olrld2EI=",
+    "is_active": "True",
+    "created": "2024-01-06 00:00:00",
+    "modified": "2024-01-06 00:00:00"
+  }
+},
+{
+  "model": "users.Employee",
+  "pk": 5,
+  "fields": {
+    "user_ptr_id":5
+  }
+}
+
+
 ]
