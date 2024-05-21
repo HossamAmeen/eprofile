@@ -196,7 +196,6 @@ class LectureAttendanceViewSet(ModelViewSet):
 class CalculateStatisticsAPIView(APIView):
 
     def get(self, request):
-        
         staff_members_counts = StaffMember.objects.annotate(
             action_nums=Count(
                 'studentactivity',
@@ -204,15 +203,15 @@ class CalculateStatisticsAPIView(APIView):
             ),
             clinic_count=Count(
                 'studentactivity__clinicattendance',
-                filter=Q(studentactivity__clinicattendance__approve_status='pending')
+                filter=Q(studentactivity__clinicattendance__approve_status='pending')  # noqa: E501
             ),
             operation_count=Count(
                 'studentactivity__operationattendance',
-                filter=Q(studentactivity__operationattendance__approve_status='pending')
+                filter=Q(studentactivity__operationattendance__approve_status='pending')  # noqa: E501
             ),
             shift_count=Count(
                 'studentactivity__shiftattendance',
-                filter=Q(studentactivity__shiftattendance__approve_status='pending')
+                filter=Q(studentactivity__shiftattendance__approve_status='pending')  # noqa: E501
             )
         )
 
