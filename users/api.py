@@ -1,9 +1,9 @@
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-import pytz
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -88,9 +88,7 @@ class RequestPasswordReset(generics.GenericAPIView):
         if user:
             token_generator = PasswordResetTokenGenerator()
             token = token_generator.make_token(user)
-            timezone = pytz.timezone('UTC')
-            expiration_date = timezone.localize(datetime.now() +
-                                                timedelta(hours=24))
+            expiration_date = timezone.now() + timedelta(hours=24)
 
             reset = PasswordReset(email=email,
                                   token=token, expiration_date=expiration_date)
