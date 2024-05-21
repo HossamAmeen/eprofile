@@ -13,7 +13,6 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-import environ
 from dotenv import load_dotenv
 
 # for load secret keys from env
@@ -188,5 +187,3 @@ SIMPLE_JWT = {
     "JTI_CLAIM": "jti",
 }
 
-env = environ.Env()
-environ.Env.read_env()
