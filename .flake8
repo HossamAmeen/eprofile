@@ -4,5 +4,4 @@ exclude =
     __pycache__,
     migrations,  # Exclude migration files
     *settings.py,
-    venv,
-    requirements,
+    venv
