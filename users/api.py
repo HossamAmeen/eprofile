@@ -8,6 +8,7 @@ from rest_framework import filters, generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+import pytz
 
 from users.models import (Admin, Employee, PasswordReset, StaffMember, Student,
                           User)
@@ -87,7 +88,8 @@ class RequestPasswordReset(generics.GenericAPIView):
         if user:
             token_generator = PasswordResetTokenGenerator()
             token = token_generator.make_token(user)
-            expiration_date = datetime.now() + timedelta(hours=24)
+            timezone = pytz.timezone('UTC')
+            expiration_date = timezone.localize(datetime.now() + timedelta(hours=24))
 
             reset = PasswordReset(email=email,
                                   token=token, expiration_date=expiration_date)
