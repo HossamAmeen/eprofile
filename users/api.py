@@ -105,6 +105,7 @@ class EmployeeViewSet(UserViewSet):
             serializer.save(password=make_password(
                 serializer.validated_data['password']))
 
+
 class RequestPasswordReset(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = ResetPasswordRequestSerializer
