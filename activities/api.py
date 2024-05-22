@@ -198,19 +198,42 @@ class LectureAttendanceViewSet(ModelViewSet):
         return lectureAttendanceSerializer
 
 
-class CalculateStatisticsAPIView(APIView):
+class StaffMemberStatisticsAPIView(APIView):
 
     def get(self, request):
-        staff_members = StaffMember.objects.annotate(
-            action_nums=Count('studentactivity', filter=~Q(
-                studentactivity__approve_status='pending'
-                ))).order_by('action_nums')
+        staff_members_counts = StaffMember.objects.annotate(
+            action_nums=Count(
+                'studentactivity',
+                filter=~Q(studentactivity__approve_status='pending')
+            ),
+            lecture_count=Count(
+                'studentactivity__lecture',
+                filter=~Q(studentactivity__lecture__approve_status='pending')  # noqa
+            ),
+            clinic_count=Count(
+                'studentactivity__clinicattendance',
+                filter=~Q(studentactivity__clinicattendance__approve_status='pending')  # noqa
+            ),
+            operation_count=Count(
+                'studentactivity__operationattendance',
+                filter=~Q(studentactivity__operationattendance__approve_status='pending')  # noqa
+            ),
+            shift_count=Count(
+                'studentactivity__shiftattendance',
+                filter=~Q(studentactivity__shiftattendance__approve_status='pending')  # noqa
+            )
+        )
+
         response_data = [
             {
                 'staff_member_id': staff_member.id,
                 'staff_member_name': staff_member.full_name,
-                'action_nums': staff_member.action_nums
+                'action_nums': staff_member.action_nums,
+                'lecture_count': staff_member.lecture_count,
+                'clinic_count': staff_member.clinic_count,
+                'operation_count': staff_member.operation_count,
+                'shift_count': staff_member.shift_count
             }
-            for staff_member in staff_members
+            for staff_member in staff_members_counts
         ]
         return Response(response_data, status=status.HTTP_200_OK)

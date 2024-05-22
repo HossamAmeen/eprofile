@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from activities.api import (CalculateStatisticsAPIView, ClinicViewSet,
-                            ExamScoreViewSet, ExamViewSet,
+from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
                             LectureAttendanceViewSet, LectureViewSet,
                             OperationAttendanceViewSet, ShiftAttendanceViewSet,
+                            StaffMemberStatisticsAPIView,
                             StudentActivityStatisticAPIView)
 
 router = DefaultRouter()
@@ -22,7 +22,7 @@ router.register(r'lecture-attendances', LectureAttendanceViewSet,
 urlpatterns = router.urls
 urlpatterns += [
     path('student-statistices/', StudentActivityStatisticAPIView.as_view()),
-    path('staff-member-statistices/', CalculateStatisticsAPIView.as_view()),
+    path('staff-member-statistices/', StaffMemberStatisticsAPIView.as_view()),
     path('update/exam-score/', ExamScoreViewSet.as_view({
         "patch": "bulk_update"})),
 ]
