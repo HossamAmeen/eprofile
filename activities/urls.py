@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
@@ -25,4 +25,6 @@ urlpatterns += [
     path('staff-member-statistices/', StaffMemberStatisticsAPIView.as_view()),
     path('update/exam-score/', ExamScoreViewSet.as_view({
         "patch": "bulk_update"})),
+    path("__debug__/", include("debug_toolbar.urls")),
+
 ]
