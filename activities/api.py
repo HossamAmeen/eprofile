@@ -205,7 +205,7 @@ class StaffMemberStatisticsAPIView(APIView):
         if request.user. get_role() == 'StaffMember':
             staff_query = StaffMember.objects.filter(id=request.user.id)
         else:
-            staff_query = StaffMember.objects.all()
+            staff_query = StaffMember.objects.order_by('id')
         staff_members_counts = staff_query.annotate(
             action_nums=Count(
                 'studentactivity',
@@ -227,7 +227,7 @@ class StaffMemberStatisticsAPIView(APIView):
                 'studentactivity__shiftattendance',
                 filter=~Q(studentactivity__shiftattendance__approve_status='pending')  # noqa
             )
-        )
+        ).order_by('action_nums')
 
         paginator = LimitOffsetPagination()
         paginator.default_limit = 25
@@ -240,5 +240,5 @@ class StaffMemberStatisticsAPIView(APIView):
             'previous': paginator.get_previous_link(),
             'results': list(result_page)
         }
-
+        
         return Response(response_data, status=status.HTTP_200_OK)
