@@ -1,6 +1,7 @@
 from django.db.models import Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
@@ -221,7 +222,10 @@ class LectureAttendanceViewSet(ModelViewSet):
 class StaffMemberStatisticsAPIView(APIView):
 
     def get(self, request):
-        staff_members_counts = StaffMember.objects.annotate(
+        staff_query = StaffMember.objects.order_by('id')
+        if request.user. get_role() == 'StaffMember':
+            staff_query = StaffMember.objects.filter(id=request.user.id)
+        staff_members_counts = staff_query.annotate(
             action_nums=Count(
                 'studentactivity',
                 filter=~Q(studentactivity__approve_status='pending')
@@ -242,18 +246,18 @@ class StaffMemberStatisticsAPIView(APIView):
                 'studentactivity__shiftattendance',
                 filter=~Q(studentactivity__shiftattendance__approve_status='pending')  # noqa
             )
-        )
+        ).order_by('action_nums')
 
-        response_data = [
-            {
-                'staff_member_id': staff_member.id,
-                'staff_member_name': staff_member.full_name,
-                'action_nums': staff_member.action_nums,
-                'lecture_count': staff_member.lecture_count,
-                'clinic_count': staff_member.clinic_count,
-                'operation_count': staff_member.operation_count,
-                'shift_count': staff_member.shift_count
-            }
-            for staff_member in staff_members_counts
-        ]
+        paginator = LimitOffsetPagination()
+        paginator.default_limit = 25
+        result_page = paginator.paginate_queryset(
+                            staff_members_counts, request)
+
+        response_data = {
+            'count': paginator.count,
+            'next': paginator.get_next_link(),
+            'previous': paginator.get_previous_link(),
+            'results': list(result_page)
+        }
+
         return Response(response_data, status=status.HTTP_200_OK)
