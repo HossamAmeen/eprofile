@@ -240,5 +240,5 @@ class StaffMemberStatisticsAPIView(APIView):
             'previous': paginator.get_previous_link(),
             'results': list(result_page)
         }
-        
+
         return Response(response_data, status=status.HTTP_200_OK)
