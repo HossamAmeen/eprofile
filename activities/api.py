@@ -33,8 +33,8 @@ class LectureViewSet(ModelViewSet):
     serializer_class = LectureSerializer
 
     def get_queryset(self):
-        queryset = Lecture.objects.order_by
-        ('-id').select_related('student', 'staff_member')
+        queryset = Lecture.objects.order_by(
+            '-id').select_related('student', 'staff_member')
         return queryset
 
     def get_serializer_class(self):
@@ -66,8 +66,8 @@ class ClinicViewSet(ModelViewSet):
         return ListClinicAttendanceSerializer
 
     def get_queryset(self):
-        queryset = ClinicAttendance.objects.order_by
-        ('-id').select_related('student', 'staff_member')
+        queryset = ClinicAttendance.objects.order_by(
+            '-id').select_related('student', 'staff_member')
         return queryset
 
     def perform_create(self, serializer):
@@ -86,8 +86,8 @@ class ShiftAttendanceViewSet(ModelViewSet):
     queryset = ShiftAttendance.objects.order_by('-id')
 
     def get_queryset(self):
-        queryset = ShiftAttendance.objects.order_by
-        ('-id').select_related('student', 'staff_member')
+        queryset = ShiftAttendance.objects.order_by(
+            '-id').select_related('student', 'staff_member')
         return queryset
 
     def get_serializer_class(self):
@@ -111,8 +111,8 @@ class OperationAttendanceViewSet(ModelViewSet):
     queryset = OperationAttendance.objects.order_by('-id')
 
     def get_queryset(self):
-        queryset = OperationAttendance.objects.order_by
-        ('-id').select_related('student', 'staff_member')
+        queryset = OperationAttendance.objects.order_by(
+            '-id').select_related('student', 'staff_member')
         return queryset
 
     def get_serializer_class(self):
