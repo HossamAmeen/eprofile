@@ -202,10 +202,9 @@ class LectureAttendanceViewSet(ModelViewSet):
 class StaffMemberStatisticsAPIView(APIView):
 
     def get(self, request):
+        staff_query = StaffMember.objects.order_by('id')
         if request.user. get_role() == 'StaffMember':
             staff_query = StaffMember.objects.filter(id=request.user.id)
-        else:
-            staff_query = StaffMember.objects.order_by('id')
         staff_members_counts = staff_query.annotate(
             action_nums=Count(
                 'studentactivity',
