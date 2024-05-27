@@ -78,6 +78,10 @@ MIDDLEWARE = [
     'eprofile.query_debug_middleware.QueryDebugMiddleware',
 ]
 
+QUERY_DEBUG = {
+    'ENABLE_STACK_TRACING': True,
+    'SHOW_COLLAPSED': True,
+}
 ROOT_URLCONF = 'eprofile.urls'
 
 TEMPLATES = [
