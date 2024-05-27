@@ -96,7 +96,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eprofile.wsgi.application'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination', # noqa
+    'DEFAULT_PAGINATION_CLASS': 'eprofile.utils.CustomPageNumberPagination', # noqa
     'PAGE_SIZE': 25,
     'DEFAULT_AUTHENTICATION_CLASSES': (   
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -106,12 +106,22 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+if os.getenv('ENVIROMENT') == "prod":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'prod_db.sqlite3',
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation

@@ -1,6 +1,6 @@
 from django.db.models import Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -34,6 +34,11 @@ class LectureViewSet(ModelViewSet):
     queryset = Lecture.objects.order_by('-id')
     serializer_class = LectureSerializer
 
+    def get_queryset(self):
+        queryset = Lecture.objects.order_by(
+            '-id').select_related('student', 'staff_member')
+        return queryset
+
     def get_serializer_class(self):
         if self.request.method == "POST":
             return LectureSerializer
@@ -62,6 +67,11 @@ class ClinicViewSet(ModelViewSet):
             return ClinicAttendanceSerializer
         return ListClinicAttendanceSerializer
 
+    def get_queryset(self):
+        queryset = ClinicAttendance.objects.order_by(
+            '-id').select_related('student', 'staff_member')
+        return queryset
+
     def perform_create(self, serializer):
         clinic = serializer.save(student_id=self.request.user.id)
         ActivityNotification.objects.create(
@@ -76,6 +86,11 @@ class ClinicViewSet(ModelViewSet):
 class ShiftAttendanceViewSet(ModelViewSet):
     permission_classes = []
     queryset = ShiftAttendance.objects.order_by('-id')
+
+    def get_queryset(self):
+        queryset = ShiftAttendance.objects.order_by(
+            '-id').select_related('student', 'staff_member')
+        return queryset
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -96,6 +111,11 @@ class ShiftAttendanceViewSet(ModelViewSet):
 class OperationAttendanceViewSet(ModelViewSet):
     permission_classes = []
     queryset = OperationAttendance.objects.order_by('-id')
+
+    def get_queryset(self):
+        queryset = OperationAttendance.objects.order_by(
+            '-id').select_related('student', 'staff_member')
+        return queryset
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -202,9 +222,10 @@ class LectureAttendanceViewSet(ModelViewSet):
 
 
 class StaffMemberStatisticsAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        staff_query = StaffMember.objects.order_by('id')
+        staff_query = StaffMember.objects.all()
         if request.user. get_role() == 'StaffMember':
             staff_query = StaffMember.objects.filter(id=request.user.id)
         staff_members_counts = staff_query.annotate(
@@ -229,12 +250,17 @@ class StaffMemberStatisticsAPIView(APIView):
                 filter=~Q(studentactivity__shiftattendance__approve_status='pending')  # noqa
             )
         ).order_by('action_nums')
-
         paginator = LimitOffsetPagination()
         paginator.default_limit = 25
         result_page = paginator.paginate_queryset(
-                            staff_members_counts, request)
+            staff_members_counts, request)
+        results = list(result_page)
 
-        serializer = StaffMemberStatisticsSerializer(result_page, many=True)
+        response_data = {
+            'count': paginator.count,
+            'next': paginator.get_next_link(),
+            'previous': paginator.get_previous_link(),
+            'results': results
+        }
 
-        return paginator.get_paginated_response(serializer.data)
+        return Response(response_data, status=status.HTTP_200_OK)

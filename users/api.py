@@ -28,6 +28,12 @@ class UserViewSet(ModelViewSet):
         serializer.save(password=make_password(
             serializer.validated_data['password']))
 
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        if serializer.validated_data.get('password'):
+            serializer.save(password=make_password(
+                serializer.validated_data['password']))
+
 
 class AdminViewSet(UserViewSet):
     permission_classes = [IsAuthenticated]
@@ -37,6 +43,12 @@ class AdminViewSet(UserViewSet):
     def perform_create(self, serializer):
         serializer.save(password=make_password(
             serializer.validated_data['password']))
+
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        if serializer.validated_data.get('password'):
+            serializer.save(password=make_password(
+                serializer.validated_data['password']))
 
 
 class StudentViewSet(ModelViewSet):
@@ -55,6 +67,12 @@ class StudentViewSet(ModelViewSet):
         serializer.save(password=make_password(
             serializer.validated_data['password']))
 
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        if serializer.validated_data.get('password'):
+            serializer.save(password=make_password(
+                serializer.validated_data['password']))
+
 
 class StaffMemberViewSet(UserViewSet):
     permission_classes = []
@@ -65,6 +83,12 @@ class StaffMemberViewSet(UserViewSet):
         serializer.save(password=make_password(
             serializer.validated_data['password']))
 
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        if serializer.validated_data.get('password'):
+            serializer.save(password=make_password(
+                serializer.validated_data['password']))
+
 
 class EmployeeViewSet(UserViewSet):
     permission_classes = []
@@ -74,6 +98,12 @@ class EmployeeViewSet(UserViewSet):
     def perform_create(self, serializer):
         serializer.save(password=make_password(
             serializer.validated_data['password']))
+
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        if serializer.validated_data.get('password'):
+            serializer.save(password=make_password(
+                serializer.validated_data['password']))
 
 
 class RequestPasswordReset(generics.GenericAPIView):
