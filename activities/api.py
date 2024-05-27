@@ -104,7 +104,7 @@ class ShiftAttendanceViewSet(ModelViewSet):
             body="student ask your approval about shift attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
-            link=f'clinic/{shift.id}'
+            link=f'/panel/shifts/evaluate/{shift.id}'
         )
 
 
