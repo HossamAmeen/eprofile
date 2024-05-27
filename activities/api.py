@@ -220,9 +220,10 @@ class LectureAttendanceViewSet(ModelViewSet):
 
 
 class StaffMemberStatisticsAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        staff_query = StaffMember.objects.order_by('id')
+        staff_query = StaffMember.objects.all()
         if request.user. get_role() == 'StaffMember':
             staff_query = StaffMember.objects.filter(id=request.user.id)
         staff_members_counts = staff_query.annotate(
@@ -247,17 +248,17 @@ class StaffMemberStatisticsAPIView(APIView):
                 filter=~Q(studentactivity__shiftattendance__approve_status='pending')  # noqa
             )
         ).order_by('action_nums')
-
         paginator = LimitOffsetPagination()
         paginator.default_limit = 25
         result_page = paginator.paginate_queryset(
-                            staff_members_counts, request)
+            staff_members_counts, request)
+        results = list(result_page)
 
         response_data = {
             'count': paginator.count,
             'next': paginator.get_next_link(),
             'previous': paginator.get_previous_link(),
-            'results': list(result_page)
+            'results': results
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
