@@ -1,5 +1,5 @@
-from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.pagination import PageNumberPagination
+from rest_framework_simplejwt.tokens import AccessToken
 
 
 def get_user_role(request):
