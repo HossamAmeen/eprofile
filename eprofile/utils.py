@@ -3,6 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
 from rest_framework.response import Response
 
+
 def get_user_role(request):
     token = AccessToken(request.META.get("HTTP_AUTHORIZATION")
                         .split(" ")[1])
