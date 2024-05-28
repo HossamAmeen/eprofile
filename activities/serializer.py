@@ -5,7 +5,7 @@ from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                ShiftAttendance, StudentActivity)
 from users.serializers import (CompetenceLevelSerializer,
                                SingleStaffMemberSerializer,
-                               SingleStudentSerializer)
+                               SingleStudentSerializer, StaffMember)
 
 
 class ListStudentActivitySerializer(serializers.ModelSerializer):
@@ -125,3 +125,18 @@ class ListlectureAttendanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = LectureAttendance
         fields = '__all__'
+
+
+class StaffMemberStatisticsSerializer(serializers.ModelSerializer):
+    action_nums = serializers.IntegerField()
+    lecture_count = serializers.IntegerField()
+    clinic_count = serializers.IntegerField()
+    operation_count = serializers.IntegerField()
+    shift_count = serializers.IntegerField()
+
+    class Meta:
+        model = StaffMember
+        fields = [
+            'id', 'full_name', 'action_nums', 'lecture_count', 'clinic_count',
+            'operation_count', 'shift_count'
+        ]

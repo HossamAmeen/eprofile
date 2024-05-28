@@ -1,6 +1,6 @@
 from django.db.models import Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status
+from rest_framework import filters
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,6 +22,7 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
+                                   StaffMemberStatisticsSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
@@ -229,15 +230,8 @@ class StaffMemberStatisticsAPIView(APIView):
         ).order_by('action_nums')
 
         paginator = LimitOffsetPagination()
-        paginator.default_limit = 25
         result_page = paginator.paginate_queryset(
-                            staff_members_counts, request)
+            staff_members_counts, request)
+        serializer = StaffMemberStatisticsSerializer(result_page, many=True)
 
-        response_data = {
-            'count': paginator.count,
-            'next': paginator.get_next_link(),
-            'previous': paginator.get_previous_link(),
-            'results': list(result_page)
-        }
-
-        return Response(response_data, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response(serializer.data)
