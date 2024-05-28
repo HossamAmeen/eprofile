@@ -137,5 +137,5 @@ class StaffMemberStatisticsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StaffMember
-        fields = ['id', 'name', 'action_nums', 'lecture_count', 'clinic_count',
-                  'operation_count', 'shift_count']
+        fields = ['id', 'full_name', 'action_nums', 'lecture_count',
+                  'clinic_count', 'operation_count', 'shift_count']

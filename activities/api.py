@@ -104,7 +104,7 @@ class ShiftAttendanceViewSet(ModelViewSet):
             body="student ask your approval about shift attendance",
             student_id=self.request.user.id,
             staff_member_id=serializer.validated_data['staff_member'].id,
-            link=f'clinic/{shift.id}'
+            link=f'/panel/shifts/evaluate/{shift.id}'
         )
 
 
@@ -250,17 +250,12 @@ class StaffMemberStatisticsAPIView(APIView):
                 filter=~Q(studentactivity__shiftattendance__approve_status='pending')  # noqa
             )
         ).order_by('action_nums')
+
         paginator = LimitOffsetPagination()
         paginator.default_limit = 25
         result_page = paginator.paginate_queryset(
-            staff_members_counts, request)
-        results = list(result_page)
+                            staff_members_counts, request)
 
-        response_data = {
-            'count': paginator.count,
-            'next': paginator.get_next_link(),
-            'previous': paginator.get_previous_link(),
-            'results': results
-        }
+        serializer = StaffMemberStatisticsSerializer(result_page, many=True)
 
-        return Response(response_data, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response(serializer.data)
