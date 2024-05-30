@@ -29,14 +29,11 @@ class ReadOnlyPremission(BasePermission):
 
 class ActivityUpdatePremission(BasePermission):
     def has_premmission(self, request, view):
-        premission_list = ['PATCH', 'PUT']
         premission_roles = ['admin', "staff_member"]
-        return (request.method in premission_list and
-                request.user.get_role() in premission_roles)
+        return request.user.get_role() in premission_roles
 
 
 class ActivityCreatePremission(BasePermission):
     def has_permission(self, request, view):
 
-        return (request.method == 'POST' and
-                request.user.get_role() == 'student')
+        return request.user.get_role() == 'student'
