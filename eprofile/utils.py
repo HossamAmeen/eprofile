@@ -1,7 +1,9 @@
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
+
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken
+
 
 def get_user_role(request):
     token = AccessToken(request.META.get("HTTP_AUTHORIZATION")
