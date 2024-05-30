@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class StaffMemberPermission(BasePermission):
@@ -19,3 +19,24 @@ class EmployeePremission(BasePermission):
 class AdminPremission(BasePermission):
     def has_permission(self, request, view):
         return request.user.get_role() == 'admin'
+
+
+class ReadOnlyPremission(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.method in SAFE_METHODS and
+                    request.user and request.user.is_authenticated)
+
+
+class ActivityUpdatePremission(BasePermission):
+    def has_premmission(self, request, view):
+        premission_list = ['PATCH', 'PUT']
+        premission_roles = ['admin', "staff_member"]
+        return (request.method in premission_list and
+                request.user.get_role() in premission_roles)
+
+
+class ActivityCreatePremission(BasePermission):
+    def has_permission(self, request, view):
+
+        return (request.method == 'POST' and
+                request.user.get_role() == 'student')

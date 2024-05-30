@@ -26,6 +26,8 @@ from activities.serializer import (ClinicAttendanceSerializer,
 from notifications.models import ActivityNotification
 from users.models import Student
 
+from .permissions import (ActivityCreatePremission, ActivityUpdatePremission,
+                          ReadOnlyPremission)
 from .serializer import StaffMemberStatisticsSerializer
 
 
@@ -33,6 +35,18 @@ class LectureViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Lecture.objects.order_by('-id')
     serializer_class = LectureSerializer
+
+    def get_permissions(self):
+        """
+        Returns the list of permissions that this view requires.
+        """
+        if self.action == 'create':
+            permission_classes = [ActivityCreatePremission]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            permission_classes = [ActivityUpdatePremission]
+        else:
+            permission_classes = [ReadOnlyPremission]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         queryset = Lecture.objects.order_by(
