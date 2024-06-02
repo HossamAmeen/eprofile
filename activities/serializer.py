@@ -27,8 +27,24 @@ class ListLectureSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class LectureSerializer(serializers.ModelSerializer):
+class UpdateLectureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lecture
+        fields = ['topic', 'date', 'approve_status', 'feedback', 'score', 'score_image_2']
 
+    # def update(self, instance, validated_data):
+    #     instance.topic = validated_data.get('topic', instance.topic)
+    #     instance.date = validated_data.get('date', instance.date)
+    #     instance.approve_status = validated_data.get('approve_status', instance.approve_status)
+    #     instance.feedback = validated_data.get('feedback', instance.feedback)
+    #     instance.score = validated_data.get('score', instance.score)
+    #     instance.score_image_2 = validated_data.get('score_image_2', instance.score_image_2)
+    #     instance.save()
+    #     return instance
+
+
+class LectureSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Lecture
         fields = "__all__"

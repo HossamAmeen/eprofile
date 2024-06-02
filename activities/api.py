@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+# from .permissions import (ReadOnlyPremission, ActivityCreatePremission,
+#                           ActivityUpdatePremission)
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
@@ -26,27 +28,13 @@ from activities.serializer import (ClinicAttendanceSerializer,
 from notifications.models import ActivityNotification
 from users.models import Student
 
-from .permissions import (ActivityCreatePremission, ActivityUpdatePremission,
-                          ReadOnlyPremission)
-from .serializer import StaffMemberStatisticsSerializer
+from .serializer import StaffMemberStatisticsSerializer ,UpdateLectureSerializer
+
 
 
 class LectureViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Lecture.objects.order_by('-id')
-    serializer_class = LectureSerializer
-
-    def get_permissions(self):
-        """
-        Returns the list of permissions that this view requires.
-        """
-        if self.action == 'create':
-            permission_classes = [ActivityCreatePremission]
-        elif self.action in ['update', 'partial_update', 'destroy']:
-            permission_classes = [ActivityUpdatePremission]
-        else:
-            permission_classes = [ReadOnlyPremission]
-        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         queryset = Lecture.objects.order_by(
@@ -54,8 +42,10 @@ class LectureViewSet(ModelViewSet):
         return queryset
 
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        if self.action == 'create':
             return LectureSerializer
+        elif self.action in ['update', 'partial_update']:
+            return UpdateLectureSerializer
         return ListLectureSerializer
 
     def perform_create(self, serializer):

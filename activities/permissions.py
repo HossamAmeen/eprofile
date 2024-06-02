@@ -21,19 +21,10 @@ class AdminPremission(BasePermission):
         return request.user.get_role() == 'admin'
 
 
-class ReadOnlyPremission(BasePermission):
+class ActivityPremission(BasePermission):
     def has_permission(self, request, view):
-        return bool(request.method in SAFE_METHODS and
-                    request.user and request.user.is_authenticated)
-
-
-class ActivityUpdatePremission(BasePermission):
-    def has_premmission(self, request, view):
-        premission_roles = ['admin', "staff_member"]
-        return request.user.get_role() in premission_roles
-
-
-class ActivityCreatePremission(BasePermission):
-    def has_permission(self, request, view):
-
-        return request.user.get_role() == 'student'
+        return True
+        # return (request.method == 'POST' and
+        #         request.user.get_role() == 'student' or (
+        #             request.method == ['PATCH', 'PUT'] and (
+        #                 request.user.get_role() == ['admin', "staff_member"])))
