@@ -27,7 +27,7 @@ class Lecture(StudentActivity):
 
 
 class LectureAttendance(models.Model):
-    is_present = models.BooleanField(null=True, default=False)  
+    is_present = models.BooleanField(null=True, default=False)
     lecture = models.ForeignKey(Lecture, null=True, on_delete=models.SET_NULL)
     student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
 
