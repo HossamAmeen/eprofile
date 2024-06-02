@@ -3,7 +3,7 @@ from rest_framework import serializers
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
                                ShiftAttendance, StudentActivity)
-from users.models import StaffMember
+from users.models import StaffMember, Student
 from users.serializers import (CompetenceLevelSerializer,
                                SingleStaffMemberSerializer,
                                SingleStudentSerializer)
@@ -139,3 +139,17 @@ class StaffMemberStatisticsSerializer(serializers.ModelSerializer):
         model = StaffMember
         fields = ['id', 'full_name', 'action_nums', 'lecture_count',
                   'clinic_count', 'operation_count', 'shift_count']
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    total_score = serializers.IntegerField()
+    competence_level = serializers.IntegerField()
+
+    class Meta:
+        model = Student
+        fields = ['id', 'full_name', 'competence_level', 'total_score']
+
+    # def get_total_score(self, obj):
+    #     if obj is not None:
+    #         return obj.total_score
+    #     return 0

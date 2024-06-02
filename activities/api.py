@@ -1,4 +1,4 @@
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status
 from rest_framework.pagination import LimitOffsetPagination
@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance, StaffMember)
+                               ShiftAttendance, StaffMember, StudentActivity)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
@@ -26,13 +26,15 @@ from activities.serializer import (ClinicAttendanceSerializer,
 from notifications.models import ActivityNotification
 from users.models import Student
 
-from .serializer import StaffMemberStatisticsSerializer
+from .serializer import StaffMemberStatisticsSerializer, StudentSerializer
 
 
 class LectureViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Lecture.objects.order_by('-id')
     serializer_class = LectureSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
         queryset = Lecture.objects.order_by(
@@ -61,6 +63,8 @@ class LectureViewSet(ModelViewSet):
 class ClinicViewSet(ModelViewSet):
     permission_classes = []
     queryset = ClinicAttendance.objects.order_by('-id')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -86,6 +90,8 @@ class ClinicViewSet(ModelViewSet):
 class ShiftAttendanceViewSet(ModelViewSet):
     permission_classes = []
     queryset = ShiftAttendance.objects.order_by('-id')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
         queryset = ShiftAttendance.objects.order_by(
@@ -111,6 +117,8 @@ class ShiftAttendanceViewSet(ModelViewSet):
 class OperationAttendanceViewSet(ModelViewSet):
     permission_classes = []
     queryset = OperationAttendance.objects.order_by('-id')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
         queryset = OperationAttendance.objects.order_by(
@@ -133,31 +141,6 @@ class OperationAttendanceViewSet(ModelViewSet):
         )
 
 
-class StudentActivityStatisticAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        students = Student.objects.order_by('competence_level')
-
-        if request.user.get_role() == "student":
-            students = students.filter(id=request.user.pk)
-
-        respose_data = {"results": []}
-        for student in students:
-            respose_data['results'].append({
-                "student_name": student.full_name,
-                "competence_level": student.competence_level.name,
-                "lecture_counter": 0,
-                "lecture_attendance_count": 0,
-                "shift_count": 0,
-                "clinic_count": 0,
-                "operation_count": 0,
-                "total_score": 55,
-                "is_passed": True
-                })
-        return Response(respose_data)
-
-
 class ExamViewSet(ModelViewSet):
     queryset = Exam.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -178,7 +161,7 @@ class ExamViewSet(ModelViewSet):
 class ExamScoreViewSet(ModelViewSet):
     queryset = ExamScore.objects.all()
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['exam']
+    filterset_fields = ['exam', 'student']
     search_fields = ['student__full_name']
 
     def get_queryset(self):
@@ -259,3 +242,58 @@ class StaffMemberStatisticsAPIView(APIView):
         serializer = StaffMemberStatisticsSerializer(result_page, many=True)
 
         return paginator.get_paginated_response(serializer.data)
+
+
+class StudentActivityStatisticAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        students = Student.objects.select_related(
+            'competence_level').order_by('competence_level')
+
+        respose_data = {"results": []}
+
+        if request.user.get_role() == "student":
+            students = students.filter(id=request.user.pk)
+
+        for student in students:
+            respose_data['results'].append({
+                "student_name": student.full_name,
+                "competence_level": student.competence_level.name,
+                "lecture_counter": student.id,
+                "lecture_attendance_count": 0,
+                "shift_count": 0,
+                "clinic_count": 0,
+                "operation_count": 0,
+                "total_score": 55,
+                "is_passed": True
+                })
+        students = students.annotate(
+            lecture_counter=Count(
+                'lectureattendance',
+                filter=Q(lectureattendance__is_present=True)
+            ),
+            lecture_attendance_score=Sum(
+                'studentactivity__score',
+                 filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+                          studentactivity__lectureattendance__isnull=False)
+            ),
+            shift_score=Sum(
+                'studentactivity__score',
+                 filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+                          studentactivity__shiftattendance__isnull=False)
+            ),
+            clinic_score=Sum(
+                'studentactivity__score',
+                 filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+                          studentactivity__clinicattendance__isnull=False)
+            ),
+            operation_score=Sum(OperationAttendance),
+            total_score=Sum(
+                'studentactivity__score',
+                filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT) # noqa
+            ),
+            )
+        respose_data = StudentSerializer(students, many=True).data
+        
+        return Response(respose_data)
