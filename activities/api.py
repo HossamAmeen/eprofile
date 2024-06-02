@@ -7,9 +7,7 @@ from rest_framework.response import Response
 from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-# from .permissions import (ReadOnlyPremission, ActivityCreatePremission,
-#                           ActivityUpdatePremission)
-
+from .permissions import ActivityPremission
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
                                ShiftAttendance, StaffMember)
@@ -24,16 +22,15 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
-                                   lectureAttendanceSerializer)
+                                   lectureAttendanceSerializer,
+                                   StaffMemberStatisticsSerializer,
+                                   UpdateLectureSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
 
-from .serializer import StaffMemberStatisticsSerializer ,UpdateLectureSerializer
-
-
 
 class LectureViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ActivityPremission]
     queryset = Lecture.objects.order_by('-id')
 
     def get_queryset(self):

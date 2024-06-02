@@ -23,8 +23,11 @@ class AdminPremission(BasePermission):
 
 class ActivityPremission(BasePermission):
     def has_permission(self, request, view):
-        return True
-        # return (request.method == 'POST' and
-        #         request.user.get_role() == 'student' or (
-        #             request.method == ['PATCH', 'PUT'] and (
-        #                 request.user.get_role() == ['admin', "staff_member"])))
+        if request.method == 'POST' and request.user.get_role() == 'student':
+            return True
+        elif (request.method in ['PATCH', 'PUT'] and
+                request.user.get_role() in ['admin', 'staff_member']):
+            return True
+        elif request.method in SAFE_METHODS:
+            return True
+        return False
