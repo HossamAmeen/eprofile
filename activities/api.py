@@ -262,6 +262,7 @@ class StudentActivityStatisticAPIView(APIView):
 
         for student in students:
             respose_data['results'].append({
+                "student_id": student.id,
                 "student_name": student.full_name,
                 "competence_level": student.competence_level.name,
                 "lecture_counter": student.id,
