@@ -1,9 +1,9 @@
+
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from collections import OrderedDict
-from eprofile.utils import NotificationPagination
+
 from activities.permissions import StaffMemberPermission
+from eprofile.utils import NotificationPagination
 from notifications.models import ActivityNotification
 from notifications.serializers import ActivityNotificationSerializer
 

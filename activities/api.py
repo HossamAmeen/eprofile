@@ -1,6 +1,6 @@
 from django.db.models import Avg, BooleanField, Case, Count, Q, Value, When
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status
+from rest_framework import filters, mixins, status
 from rest_framework.pagination import (LimitOffsetPagination,
                                        PageNumberPagination)
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework import  mixins
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,

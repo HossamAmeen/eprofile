@@ -4,7 +4,7 @@ from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
                                ShiftAttendance, StudentActivity)
 from users.models import StaffMember, Student
-from users.serializers import (CompetenceLevelSerializer,
+from users.serializers import (SingleCompetenceLevelSerializer,
                                SingleStaffMemberSerializer,
                                SingleStudentSerializer)
 
@@ -89,7 +89,7 @@ class ExamSerializer(serializers.ModelSerializer):
 
 
 class ListExamSerializer(serializers.ModelSerializer):
-    competence_level = CompetenceLevelSerializer()
+    competence_level = SingleCompetenceLevelSerializer()
 
     class Meta:
         model = Exam
@@ -141,14 +141,15 @@ class StaffMemberStatisticsSerializer(serializers.ModelSerializer):
                   'clinic_count', 'operation_count', 'shift_count']
 
 
-class StudentSerializer(serializers.ModelSerializer):
-    total_score = serializers.IntegerField()
-    competence_level = serializers.IntegerField()
+class StudentStatisticsSerializer(serializers.ModelSerializer):
+    competence_level = SingleCompetenceLevelSerializer()
 
     class Meta:
         model = Student
-        fields = ['id', 'full_name', 'competence_level', 'total_score']
-
+        fields = ['id', 'full_name', 'competence_level', 'lecture_counter',
+                  'lecture_score', 'shift_score', 'clinic_score',
+                  'operation_score', 'total_score', 'is_passed']
+        
     # def get_total_score(self, obj):
     #     if obj is not None:
     #         return obj.total_score
