@@ -1,12 +1,14 @@
-from django.db.models import Count, Q, Sum
+from django.db.models import Avg, BooleanField, Case, Count, Q, Value, When
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.pagination import (LimitOffsetPagination,
+                                       PageNumberPagination)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework import  mixins
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
@@ -22,11 +24,11 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
+                                   StaffMemberStatisticsSerializer,
+                                   StudentStatisticsSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
-
-from .serializer import StaffMemberStatisticsSerializer, StudentSerializer
 
 
 class LectureViewSet(ModelViewSet):
@@ -57,7 +59,9 @@ class LectureViewSet(ModelViewSet):
         )
         for student in Student.objects.filter(
                 competence_level=lecture.student.competence_level):
-            LectureAttendance.objects.create(lecture=lecture, student=student)
+            is_present = True if student.id == self.request.user.id else False
+            LectureAttendance.objects.create(
+                lecture=lecture, student=student, is_present=is_present)
 
 
 class ClinicViewSet(ModelViewSet):
@@ -245,6 +249,7 @@ class StaffMemberStatisticsAPIView(APIView):
 
 
 class StudentActivityStatisticAPIView(APIView):
+    page_size = 10
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -261,39 +266,44 @@ class StudentActivityStatisticAPIView(APIView):
                 "student_name": student.full_name,
                 "competence_level": student.competence_level.name,
                 "lecture_counter": student.id,
-                "lecture_attendance_count": 0,
-                "shift_count": 0,
-                "clinic_count": 0,
-                "operation_count": 0,
+                "lecture_score": 0,
+                "shift_score": 0,
+                "clinic_score": 0,
+                "operation_score": 0,
                 "total_score": 55,
                 "is_passed": True
                 })
-        students = students.annotate(
-            lecture_counter=Count(
-                'lectureattendance',
-                filter=Q(lectureattendance__is_present=True)
-            ),
-            lecture_attendance_score=Sum(
-                'studentactivity__score',
-                 filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
-                          studentactivity__lectureattendance__isnull=False)
-            ),
-            shift_score=Sum(
-                'studentactivity__score',
-                 filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
-                          studentactivity__shiftattendance__isnull=False)
-            ),
-            clinic_score=Sum(
-                'studentactivity__score',
-                 filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
-                          studentactivity__clinicattendance__isnull=False)
-            ),
-            operation_score=Sum(OperationAttendance),
-            total_score=Sum(
-                'studentactivity__score',
-                filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT) # noqa
-            ),
-            )
-        respose_data = StudentSerializer(students, many=True).data
-        
+        # students = students.annotate(
+        #     lecture_counter=Count(
+        #         'lectureattendance',
+        #         filter=Q(lectureattendance__is_present=True)
+        #     ),
+        #     lecture_score=Avg(
+        #         'studentactivity__score',
+        #          filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+        #                   studentactivity__lecture__isnull=False)
+        #     ),
+        #     shift_score=Avg(
+        #         'studentactivity__score',
+        #          filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+        #                   studentactivity__shiftattendance__isnull=False)
+        #     ),
+        #     clinic_score=Avg(
+        #         'studentactivity__score',
+        #         filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+        #                  studentactivity__clinicattendance__isnull=False)
+        #     ),
+        #     operation_score=Avg(
+        #         'studentactivity__score',
+        #         filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+        #                  studentactivity__operationattendance__isnull=False)),
+        #     total_score=Avg(
+        #         'studentactivity__score',
+        #         filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT) # noqa
+        #     ),
+        #     is_passed=Case(When(total_score__gt=60, then=Value(True)),
+        #                    default=Value(False), output_field=BooleanField())
+        #     )
+        # respose_data = StudentStatisticsSerializer(students, many=True).data
+
         return Response(respose_data)
