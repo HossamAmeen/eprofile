@@ -1,8 +1,7 @@
-from django.db.models import Avg, BooleanField, Case, Count, Q, Value, When
+from django.db.models import Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, mixins, status
-from rest_framework.pagination import (LimitOffsetPagination,
-                                       PageNumberPagination)
+from rest_framework import filters
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
@@ -11,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance, StaffMember, StudentActivity)
+                               ShiftAttendance, StaffMember)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
@@ -24,10 +23,10 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
                                    StaffMemberStatisticsSerializer,
-                                   StudentStatisticsSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
+from users.permissions import AdminAndEmployeePermission
 
 
 class LectureViewSet(ModelViewSet):
@@ -192,6 +191,7 @@ class ExamScoreViewSet(ModelViewSet):
 
 
 class LectureAttendanceViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated, AdminAndEmployeePermission]
     queryset = LectureAttendance.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['lecture', 'student']

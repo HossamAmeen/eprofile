@@ -12,6 +12,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from users.models import (Admin, Employee, PasswordReset, StaffMember, Student,
                           User)
+from users.permissions import AdminPermissions
 from users.serializers import (AdminSerializer, EmployeeSerializer,
                                ListStudentSerialzier,
                                ResetPasswordRequestSerializer,
@@ -91,7 +92,7 @@ class StaffMemberViewSet(UserViewSet):
 
 
 class EmployeeViewSet(UserViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated, AdminPermissions]
     queryset = Employee.objects.order_by('-id')
     serializer_class = EmployeeSerializer
 
