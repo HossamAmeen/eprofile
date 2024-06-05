@@ -107,7 +107,7 @@ class EmployeeViewSet(UserViewSet):
 
 
 class RequestPasswordReset(generics.GenericAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = ()
     serializer_class = ResetPasswordRequestSerializer
 
     def post(self, request):
