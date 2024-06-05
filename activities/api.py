@@ -41,9 +41,9 @@ class LectureViewSet(ModelViewSet):
         return queryset
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.request.method == 'POST':
             return LectureSerializer
-        elif self.action in ['update', 'partial_update']:
+        elif self.request.method in ['PUT', 'PATCH']:
             return UpdateLectureSerializer
         return ListLectureSerializer
 
