@@ -27,13 +27,6 @@ class ListLectureSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UpdateLectureSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lecture
-        fields = ['topic', 'date', 'approve_status',
-                  'feedback', 'score', 'score_image_2']
-
-
 class LectureSerializer(serializers.ModelSerializer):
 
     class Meta:

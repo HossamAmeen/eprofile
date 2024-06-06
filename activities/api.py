@@ -23,7 +23,6 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
                                    StaffMemberStatisticsSerializer,
-                                   UpdateLectureSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
@@ -43,8 +42,6 @@ class LectureViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return LectureSerializer
-        elif self.request.method in ['PUT', 'PATCH']:
-            return UpdateLectureSerializer
         return ListLectureSerializer
 
     def perform_create(self, serializer):
