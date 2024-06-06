@@ -22,17 +22,17 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
+                                   StaffMemberStatisticsSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
 
-from .serializer import StaffMemberStatisticsSerializer
+from .permissions import ActivityPremission
 
 
 class LectureViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ActivityPremission]
     queryset = Lecture.objects.order_by('-id')
-    serializer_class = LectureSerializer
 
     def get_queryset(self):
         queryset = Lecture.objects.order_by(
@@ -40,7 +40,7 @@ class LectureViewSet(ModelViewSet):
         return queryset
 
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        if self.request.method == 'POST':
             return LectureSerializer
         return ListLectureSerializer
 
