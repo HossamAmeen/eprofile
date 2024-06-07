@@ -263,17 +263,21 @@ class StudentActivityStatisticAPIView(APIView):
             students = students.filter(id=request.user.pk)
 
         for student in students:
+            lecture_score = Lecture.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
+            shift_score = ShiftAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
+            clinic_score = ClinicAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
+            operation_score = OperationAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
             respose_data['results'].append({
                 "student_id": student.id,
                 "student_name": student.full_name,
                 "competence_level": student.competence_level.name,
-                "lecture_counter": student.id,
-                "lecture_score": 0,
-                "shift_score": 0,
-                "clinic_score": 0,
-                "operation_score": 0,
-                "total_score": 55,
-                "is_passed": True
+                "lecture_counter": LectureAttendance.objects.filter(student=student).count(), # noqa
+                "lecture_score": lecture_score,
+                "shift_score": shift_score,
+                "clinic_score": clinic_score,
+                "operation_score": operation_score,
+                "total_score": (lecture_score + shift_score + clinic_score + operation_score) / 4,
+                "is_passed": True if ((lecture_score + shift_score + clinic_score + operation_score) / 4) > 60 else False
                 })
         # students = students.annotate(
         #     lecture_counter=Count(
