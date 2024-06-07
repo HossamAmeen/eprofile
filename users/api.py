@@ -9,7 +9,7 @@ from rest_framework import filters, generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-
+from users.utils import send_email
 from users.models import (Admin, Employee, PasswordReset, StaffMember, Student,
                           User)
 from users.serializers import (AdminSerializer, EmployeeSerializer,
@@ -123,7 +123,12 @@ class RequestPasswordReset(generics.GenericAPIView):
             reset = PasswordReset(email=email,
                                   token=token, expiration_date=expiration_date)
             reset.save()
-
+            reset_url = f"http://eprofile2.egypal.fr/confirm-password?token={token}"
+            email_message = \
+                f'You are receiving this email because you requested a password reset for your account.\n\n' \
+                f'To reset your password, please click the following link:\n' \
+                f'{reset_url}\n\n' f'This link will expire in {48} hours.'
+            send_email(email, 'Password Reset Requested', email_message)
             return Response({'success': token}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "User with credentials not found"},

@@ -212,8 +212,10 @@ class StaffMemberStatisticsAPIView(APIView):
 
     def get(self, request):
         staff_query = StaffMember.objects.all()
+
         if request.user. get_role() == 'StaffMember':
             staff_query = StaffMember.objects.filter(id=request.user.id)
+
         staff_members_counts = staff_query.annotate(
             action_nums=Count(
                 'studentactivity',
