@@ -276,7 +276,7 @@ class StudentActivityStatisticAPIView(APIView):
                 "shift_score":  round(shift_score, 2),
                 "clinic_score": round(clinic_score, 2),
                 "operation_score": round(operation_score, 2),
-                "total_score": (lecture_score + shift_score + clinic_score + operation_score) / 4,
+                "total_score": round((lecture_score + shift_score + clinic_score + operation_score) / 4, 2),
                 "is_passed": True if ((lecture_score + shift_score + clinic_score + operation_score) / 4) > 60 else False
                 })
         # students = students.annotate(
