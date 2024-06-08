@@ -40,6 +40,8 @@ class LectureViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = Lecture.objects.order_by(
             '-id').select_related('student', 'staff_member')
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
         return queryset
 
     def get_serializer_class(self):
@@ -77,6 +79,8 @@ class ClinicViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = ClinicAttendance.objects.order_by(
             '-id').select_related('student', 'staff_member')
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
         return queryset
 
     def perform_create(self, serializer):
@@ -99,6 +103,8 @@ class ShiftAttendanceViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = ShiftAttendance.objects.order_by(
             '-id').select_related('student', 'staff_member')
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
         return queryset
 
     def get_serializer_class(self):
@@ -126,6 +132,8 @@ class OperationAttendanceViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = OperationAttendance.objects.order_by(
             '-id').select_related('student', 'staff_member')
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
         return queryset
 
     def get_serializer_class(self):
@@ -213,7 +221,7 @@ class StaffMemberStatisticsAPIView(APIView):
     def get(self, request):
         staff_query = StaffMember.objects.all()
 
-        if request.user. get_role() == 'StaffMember':
+        if request.user.get_role() == 'StaffMember':
             staff_query = StaffMember.objects.filter(id=request.user.id)
 
         staff_members_counts = staff_query.annotate(
