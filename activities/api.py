@@ -272,10 +272,10 @@ class StudentActivityStatisticAPIView(APIView):
                 "student_name": student.full_name,
                 "competence_level": student.competence_level.name,
                 "lecture_counter": LectureAttendance.objects.filter(student=student).count(), # noqa
-                "lecture_score": lecture_score,
-                "shift_score": shift_score,
-                "clinic_score": clinic_score,
-                "operation_score": operation_score,
+                "lecture_score": round(lecture_score, 2),
+                "shift_score":  round(shift_score, 2),
+                "clinic_score": round(clinic_score, 2),
+                "operation_score": round(operation_score, 2),
                 "total_score": (lecture_score + shift_score + clinic_score + operation_score) / 4,
                 "is_passed": True if ((lecture_score + shift_score + clinic_score + operation_score) / 4) > 60 else False
                 })
