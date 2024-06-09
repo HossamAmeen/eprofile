@@ -149,8 +149,3 @@ class StudentStatisticsSerializer(serializers.ModelSerializer):
         fields = ['id', 'full_name', 'competence_level', 'lecture_counter',
                   'lecture_score', 'shift_score', 'clinic_score',
                   'operation_score', 'total_score', 'is_passed']
-        
-    # def get_total_score(self, obj):
-    #     if obj is not None:
-    #         return obj.total_score
-    #     return 0

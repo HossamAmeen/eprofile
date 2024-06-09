@@ -13,19 +13,6 @@ class User(AbstractUser, TimeStampedModel):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']
 
-    def save(self, **kwargs):
-        super().save(**kwargs)
-
-    def get_role(self):
-        if hasattr(self, 'student'):
-            return "student"
-        elif hasattr(self, 'staffmember'):
-            return "staff_member"
-        elif hasattr(self, 'employee'):
-            return "employee"
-        elif hasattr(self, 'admin'):
-            return "admin"
-
 
 class Admin(User):
     pass
