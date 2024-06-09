@@ -1,6 +1,5 @@
 import pytest
 from django.urls import reverse
-from users.api import StudentViewSet
 from users.models import CompetenceLevel, Student
 
 
