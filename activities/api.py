@@ -36,11 +36,9 @@ class LectureViewSet(ModelViewSet):
     filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
-        queryset = Lecture.objects.order_by(
-            '-id').select_related('student', 'staff_member')
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
-        return queryset
+        return self.queryset
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -65,7 +63,8 @@ class LectureViewSet(ModelViewSet):
 
 class ClinicViewSet(ModelViewSet):
     permission_classes = []
-    queryset = ClinicAttendance.objects.order_by('-id')
+    queryset = ClinicAttendance.objects.order_by('-id').select_related(
+        'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['staff_member', 'student']
 
@@ -75,11 +74,9 @@ class ClinicViewSet(ModelViewSet):
         return ListClinicAttendanceSerializer
 
     def get_queryset(self):
-        queryset = ClinicAttendance.objects.order_by(
-            '-id').select_related('student', 'staff_member')
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
-        return queryset
+        return self.queryset
 
     def perform_create(self, serializer):
         clinic = serializer.save(student_id=self.request.user.id)
@@ -94,16 +91,15 @@ class ClinicViewSet(ModelViewSet):
 
 class ShiftAttendanceViewSet(ModelViewSet):
     permission_classes = []
-    queryset = ShiftAttendance.objects.order_by('-id')
+    queryset = ShiftAttendance.objects.order_by('-id').select_related(
+        'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
-        queryset = ShiftAttendance.objects.order_by(
-            '-id').select_related('student', 'staff_member')
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
-        return queryset
+        return self.queryset
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -123,16 +119,15 @@ class ShiftAttendanceViewSet(ModelViewSet):
 
 class OperationAttendanceViewSet(ModelViewSet):
     permission_classes = []
-    queryset = OperationAttendance.objects.order_by('-id')
+    queryset = OperationAttendance.objects.order_by('-id').select_related(
+        'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
-        queryset = OperationAttendance.objects.order_by(
-            '-id').select_related('student', 'staff_member')
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
-        return queryset
+        return self.queryset
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -151,7 +146,7 @@ class OperationAttendanceViewSet(ModelViewSet):
 
 
 class ExamViewSet(ModelViewSet):
-    queryset = Exam.objects.all()
+    queryset = Exam.objects.order_by('-id').select_related('competence_level')
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['competence_level']
 
@@ -168,7 +163,8 @@ class ExamViewSet(ModelViewSet):
 
 
 class ExamScoreViewSet(ModelViewSet):
-    queryset = ExamScore.objects.all()
+    queryset = ExamScore.objects.order_by('-id').select_related(
+        'student', 'exam')
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['exam', 'student']
     search_fields = ['student__full_name']
