@@ -1,7 +1,8 @@
 import pytest
-from users.models import Student, CompetenceLevel
-from users.api import StudentViewSet
 from django.urls import reverse
+
+from users.api import StudentViewSet
+from users.models import CompetenceLevel, Student
 
 
 @pytest.mark.django_db
