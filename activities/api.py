@@ -1,8 +1,7 @@
-from django.db.models import Avg, BooleanField, Case, Count, Q, Value, When
+from django.db.models import Avg, Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, mixins, status
-from rest_framework.pagination import (LimitOffsetPagination,
-                                       PageNumberPagination)
+from rest_framework import filters
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
@@ -11,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance, StaffMember, StudentActivity)
+                               ShiftAttendance, StaffMember)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
@@ -24,7 +23,6 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
                                    StaffMemberStatisticsSerializer,
-                                   StudentStatisticsSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
@@ -286,8 +284,11 @@ class StudentActivityStatisticAPIView(APIView):
                 "clinic_score": round(clinic_score, 2),
                 "operation_score": round(operation_score, 2),
                 "exam_score": round(exam_score, 2),
-                "total_score": round((lecture_score + shift_score + clinic_score + operation_score) / 4, 2),
-                "is_passed": True if ((lecture_score + shift_score + clinic_score + operation_score) / 4) > 60 else False
+                "total_score": round((lecture_score + shift_score +
+                                      clinic_score + operation_score) / 4, 2),
+                "is_passed": True if ((lecture_score + shift_score +
+                                       clinic_score + operation_score) / 4) \
+                > 60 else False
                 })
         # students = students.annotate(
         #     lecture_counter=Count(
