@@ -271,10 +271,11 @@ class StudentActivityStatisticAPIView(APIView):
             students = students.filter(id=request.user.pk)
 
         for student in students:
-            lecture_score = Lecture.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
-            shift_score = ShiftAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
-            clinic_score = ClinicAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
-            operation_score = OperationAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0
+            lecture_score = Lecture.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            shift_score = ShiftAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            clinic_score = ClinicAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            operation_score = OperationAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            exam_score = ExamScore.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
             respose_data['results'].append({
                 "student_id": student.id,
                 "student_name": student.full_name,
@@ -284,6 +285,7 @@ class StudentActivityStatisticAPIView(APIView):
                 "shift_score":  round(shift_score, 2),
                 "clinic_score": round(clinic_score, 2),
                 "operation_score": round(operation_score, 2),
+                "exam_score": round(exam_score, 2),
                 "total_score": round((lecture_score + shift_score + clinic_score + operation_score) / 4, 2),
                 "is_passed": True if ((lecture_score + shift_score + clinic_score + operation_score) / 4) > 60 else False
                 })

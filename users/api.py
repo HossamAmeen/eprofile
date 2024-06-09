@@ -6,10 +6,10 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from users.utils import send_email
+
 from users.models import (Admin, Employee, PasswordReset, StaffMember, Student,
                           User)
 from users.serializers import (AdminSerializer, EmployeeSerializer,
@@ -17,6 +17,7 @@ from users.serializers import (AdminSerializer, EmployeeSerializer,
                                ResetPasswordRequestSerializer,
                                ResetPasswordSerializer, StaffMemberSerializer,
                                StudentSerializer, UserSerializer)
+from users.utils import send_email
 
 
 class UserViewSet(ModelViewSet):
@@ -123,9 +124,10 @@ class RequestPasswordReset(generics.GenericAPIView):
             reset = PasswordReset(email=email,
                                   token=token, expiration_date=expiration_date)
             reset.save()
-            reset_url = f"http://eprofile2.egypal.fr/confirm-password?token={token}"
+            reset_url = f"http://eprofile2.egypal.fr/confirm-password?token={token}" # noqa
             email_message = \
-                f'You are receiving this email because you requested a password reset for your account.\n\n' \
+                f'You are receiving this email because you requested '\
+                f'a password reset for your account.\n\n' \
                 f'To reset your password, please click the following link:\n' \
                 f'{reset_url}\n\n' f'This link will expire in {48} hours.'
             send_email(email, 'Password Reset Requested', email_message)
