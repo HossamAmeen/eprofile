@@ -22,9 +22,3 @@ def test_student_create(client):
     assert Student.objects.count() == database_count + 1
     assert response.status_code == 201
 
-
-# @pytest.mark.django_db
-# def test_student_update(client):
-#     url = reverse('students-list')
-
-
