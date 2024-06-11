@@ -260,9 +260,10 @@ class StudentActivityStatisticAPIView(APIView):
             'competence_level').order_by('competence_level')
 
         respose_data = {"results": []}
-
+        description = ""
         if request.user.get_role() == "student":
             students = students.filter(id=request.user.pk)
+            description = students.first().competence_level.description
 
         for student in students:
             lecture_score = Lecture.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
@@ -270,10 +271,14 @@ class StudentActivityStatisticAPIView(APIView):
             clinic_score = ClinicAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
             operation_score = OperationAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
             exam_score = ExamScore.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            competence_level = {
+                "name": student.competence_level.name,
+                "description": description
+            }
             respose_data['results'].append({
                 "student_id": student.id,
                 "student_name": student.full_name,
-                "competence_level": student.competence_level.name,
+                "competence_level": competence_level,
                 "lecture_counter": LectureAttendance.objects.filter(student=student).count(), # noqa
                 "lecture_score": round(lecture_score, 2),
                 "shift_score":  round(shift_score, 2),
