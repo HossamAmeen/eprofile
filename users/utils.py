@@ -3,9 +3,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-def send_mail(to_email, subject, body):
+def send_email(to_email, subject, body):
     msg = MIMEMultipart()
-    msg['From'] = "eProfileassiotwomennhealthVRF@outlook.com"
+    msg['From'] = "wpbawomenhealth@outlook.com"
     msg['To'] = to_email
     msg['Subject'] = subject
     body = body
@@ -18,8 +18,7 @@ def send_mail(to_email, subject, body):
         s.starttls()
         s.ehlo()
 
-        s.login('eProfileassiotwomennhealthVRF@outlook.com',
-                '14789632150*Eprofile#')
+        s.login('wpbawomenhealth@outlook.com', '15973*Womenhealth')
 
         s.sendmail(msg['From'], msg['To'], msg.as_string())
         print("Email sent successfully")
