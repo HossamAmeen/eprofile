@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance, SoftSkillsActivity, StudentActivity)
+                               ShiftAttendance, SoftSkillsActivity,
+                               StudentActivity)
 from users.models import StaffMember, Student
 from users.serializers import (SingleCompetenceLevelSerializer,
                                SingleStaffMemberSerializer,

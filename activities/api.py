@@ -10,7 +10,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance, SoftSkillsActivity, StaffMember)
+                               ShiftAttendance, SoftSkillsActivity,
+                               StaffMember)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
@@ -20,8 +21,10 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListLectureSerializer,
                                    ListOperationAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
+                                   ListSoftSkillsActivitySerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
+                                   SoftSkillsActivitySerializer,
                                    StaffMemberStatisticsSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
@@ -166,6 +169,11 @@ class SoftSkillsActivityViewSet(ModelViewSet):
         if self.request.user.get_role() == "staff_member":
             return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ListSoftSkillsActivitySerializer
+        return SoftSkillsActivitySerializer
 
 
 class ExamViewSet(ModelViewSet):

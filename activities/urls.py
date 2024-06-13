@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
                             LectureAttendanceViewSet, LectureViewSet,
-                            OperationAttendanceViewSet, ShiftAttendanceViewSet, SoftSkillsActivityViewSet,
+                            OperationAttendanceViewSet, ShiftAttendanceViewSet,
+                            SoftSkillsActivityViewSet,
                             StaffMemberStatisticsAPIView,
                             StudentActivityStatisticAPIView)
 
