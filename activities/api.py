@@ -175,6 +175,9 @@ class SoftSkillsActivityViewSet(ModelViewSet):
             return ListSoftSkillsActivitySerializer
         return SoftSkillsActivitySerializer
 
+    def perform_create(self, serializer):
+        serializer.save(staff_member_id=self.request.user.id)
+
 
 class ExamViewSet(ModelViewSet):
     queryset = Exam.objects.order_by('-id').select_related('competence_level')
