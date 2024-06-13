@@ -66,8 +66,8 @@ class LectureViewSet(ModelViewSet):
                 lecture=lecture, student=student, is_present=is_present)
 
 
-class ClinicViewSet(ModelViewSet):
-    permission_classes = []
+class ClinicAttendanceViewSet(ModelViewSet):
+    permission_classes = (IsAuthenticated)
     queryset = ClinicAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
@@ -97,7 +97,7 @@ class ClinicViewSet(ModelViewSet):
 
 
 class ShiftAttendanceViewSet(ModelViewSet):
-    permission_classes = []
+    permission_classes = (IsAuthenticated)
     queryset = ShiftAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
@@ -127,7 +127,7 @@ class ShiftAttendanceViewSet(ModelViewSet):
 
 
 class OperationAttendanceViewSet(ModelViewSet):
-    permission_classes = []
+    permission_classes = (IsAuthenticated)
     queryset = OperationAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
