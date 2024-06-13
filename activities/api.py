@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance, StaffMember)
+                               ShiftAttendance, SoftSkillsActivity, StaffMember)
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
@@ -38,6 +38,8 @@ class LectureViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
 
     def get_serializer_class(self):
@@ -76,6 +78,8 @@ class ClinicViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
 
     def perform_create(self, serializer):
@@ -99,6 +103,8 @@ class ShiftAttendanceViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
 
     def get_serializer_class(self):
@@ -127,6 +133,8 @@ class OperationAttendanceViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
 
     def get_serializer_class(self):
@@ -143,6 +151,21 @@ class OperationAttendanceViewSet(ModelViewSet):
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/operations/evaluate/{operation.id}'
         )
+
+
+class SoftSkillsActivityViewSet(ModelViewSet):
+    permission_classes = ()
+    queryset = SoftSkillsActivity.objects.order_by('-id').select_related(
+        'student', 'staff_member')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
+
+    def get_queryset(self):
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
+        return self.queryset
 
 
 class ExamViewSet(ModelViewSet):
