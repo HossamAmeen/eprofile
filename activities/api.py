@@ -32,7 +32,7 @@ from users.models import Student
 
 
 class LectureViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     queryset = Lecture.objects.order_by('-id')
     serializer_class = LectureSerializer
     filter_backends = [DjangoFilterBackend]
@@ -67,7 +67,7 @@ class LectureViewSet(ModelViewSet):
 
 
 class ClinicAttendanceViewSet(ModelViewSet):
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     queryset = ClinicAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
@@ -97,7 +97,7 @@ class ClinicAttendanceViewSet(ModelViewSet):
 
 
 class ShiftAttendanceViewSet(ModelViewSet):
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     queryset = ShiftAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
@@ -127,7 +127,7 @@ class ShiftAttendanceViewSet(ModelViewSet):
 
 
 class OperationAttendanceViewSet(ModelViewSet):
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     queryset = OperationAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
@@ -157,7 +157,7 @@ class OperationAttendanceViewSet(ModelViewSet):
 
 
 class SoftSkillsActivityViewSet(ModelViewSet):
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     queryset = SoftSkillsActivity.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
