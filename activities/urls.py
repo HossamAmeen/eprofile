@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
                             LectureAttendanceViewSet, LectureViewSet,
-                            OperationAttendanceViewSet, ShiftAttendanceViewSet,
+                            OperationAttendanceViewSet, ShiftAttendanceViewSet, SoftSkillsActivityViewSet,
                             StaffMemberStatisticsAPIView,
                             StudentActivityStatisticAPIView)
 
@@ -14,6 +14,8 @@ router.register(r'clinics-attendance', ClinicViewSet)
 router.register(r'shifts-attendance', ShiftAttendanceViewSet)
 router.register(r'operations-attendance', OperationAttendanceViewSet)
 router.register(r'exams', ExamViewSet, basename='exams')
+router.register('soft-skills', SoftSkillsActivityViewSet,
+                basename="soft-skills")
 router.register(r'exam-scores', ExamScoreViewSet, basename='exam-scores')
 router.register(r'lecture-attendances', LectureAttendanceViewSet,
                 basename='lecture-attendance')
