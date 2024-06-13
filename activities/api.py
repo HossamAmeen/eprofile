@@ -157,7 +157,7 @@ class OperationAttendanceViewSet(ModelViewSet):
 
 
 class SoftSkillsActivityViewSet(ModelViewSet):
-    permission_classes = ()
+    permission_classes = (IsAuthenticated)
     queryset = SoftSkillsActivity.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
