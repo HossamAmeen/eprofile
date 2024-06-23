@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include, reverse
 from rest_framework.routers import DefaultRouter
 
 from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
@@ -8,8 +8,9 @@ from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
                             StudentActivityStatisticAPIView)
 
 router = DefaultRouter()
+app_name = 'activities'
 
-router.register(r'lectures', LectureViewSet)
+router.register(r'lectures', LectureViewSet, basename='lectures')
 router.register(r'clinics-attendance', ClinicViewSet)
 router.register(r'shifts-attendance', ShiftAttendanceViewSet)
 router.register(r'operations-attendance', OperationAttendanceViewSet)
@@ -21,6 +22,7 @@ router.register(r'lecture-attendances', LectureAttendanceViewSet,
 
 urlpatterns = router.urls
 urlpatterns += [
+    path('', include(router.urls)),
     path('student-statistices/', StudentActivityStatisticAPIView.as_view()),
     path('staff-member-statistices/', StaffMemberStatisticsAPIView.as_view(),
          name='staffmember_statistices'),
