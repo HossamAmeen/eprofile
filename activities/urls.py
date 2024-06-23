@@ -9,7 +9,7 @@ from activities.api import (ClinicViewSet, ExamScoreViewSet, ExamViewSet,
 
 router = DefaultRouter()
 
-router.register(r'lectures', LectureViewSet)
+router.register(r'lectures', LectureViewSet, basename='lectures')
 router.register(r'clinics-attendance', ClinicViewSet)
 router.register(r'shifts-attendance', ShiftAttendanceViewSet)
 router.register(r'operations-attendance', OperationAttendanceViewSet)
