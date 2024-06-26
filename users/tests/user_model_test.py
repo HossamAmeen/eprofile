@@ -17,22 +17,21 @@ class TestStudent:
         return test_user
 
     def test_student_create(self, client):
-        Compentence_level = CompetenceLevel.objects.create(name="Level 1")
-        student_count = Student.objects.count()
         url = reverse('students-list')
+        competence_level = CompetenceLevel.objects.create(name="Level 1")
         data = {
             "full_name": "hossam",
             "email": "tareqsstudent@gmail.com",
             "phone": "01010079798",
             "birth_of_date": "1997-02-03",
-            "competence_level": Compentence_level.id,
+            "competence_level": competence_level.pk,
             "password": "admin"
         }
         response = client.post(url, data, content_type='application/json')
 
-        assert Student.objects.count() == student_count+1
+        assert Student.objects.count() == 1
         assert response.status_code == 201
-
+        
     def test_student_update(self, client, add_user):
         url = reverse('students-detail', args=[add_user.id])
         data = {
