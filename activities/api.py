@@ -12,6 +12,7 @@ from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
                                ShiftAttendance, SoftSkillsActivity,
                                StaffMember)
+from activities.permissions import ActivityPremission
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,

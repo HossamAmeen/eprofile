@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from activities.api import (ClinicAttendanceViewSet, ExamScoreViewSet, ExamViewSet,
-                            LectureAttendanceViewSet, LectureViewSet,
-                            OperationAttendanceViewSet, ShiftAttendanceViewSet,
-                            SoftSkillsActivityViewSet,
+from activities.api import (ClinicAttendanceViewSet, ExamScoreViewSet,
+                            ExamViewSet, LectureAttendanceViewSet,
+                            LectureViewSet, OperationAttendanceViewSet,
+                            ShiftAttendanceViewSet, SoftSkillsActivityViewSet,
                             StaffMemberStatisticsAPIView,
                             StudentActivityStatisticAPIView)
 
