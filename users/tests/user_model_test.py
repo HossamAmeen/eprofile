@@ -6,16 +6,6 @@ from users.models import CompetenceLevel, Student
 
 @pytest.mark.django_db
 class TestStudent:
-    @pytest.fixture
-    def add_user(self):
-        test_user = Student.objects.create(
-            full_name="original_name",
-            email="original_email@gmail.com",
-            phone="000",
-            birth_of_date="2000-01-01",
-        )
-        return test_user
-
     def test_student_create(self, client):
         url = reverse('students-list')
         competence_level = CompetenceLevel.objects.create(name="Level 1")
