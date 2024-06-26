@@ -1,4 +1,4 @@
-from django.db.models import Count, Q
+from django.db.models import Avg, Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.pagination import LimitOffsetPagination
@@ -27,17 +27,18 @@ from activities.serializer import (ClinicAttendanceSerializer,
 from notifications.models import ActivityNotification
 from users.models import Student
 
-from .permissions import ActivityPremission
-
 
 class LectureViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, ActivityPremission]
     queryset = Lecture.objects.order_by('-id')
+    serializer_class = LectureSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
-        queryset = Lecture.objects.order_by(
-            '-id').select_related('student', 'staff_member')
-        return queryset
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        return self.queryset
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -55,12 +56,17 @@ class LectureViewSet(ModelViewSet):
         )
         for student in Student.objects.filter(
                 competence_level=lecture.student.competence_level):
-            LectureAttendance.objects.create(lecture=lecture, student=student)
+            is_present = True if student.id == self.request.user.id else False
+            LectureAttendance.objects.create(
+                lecture=lecture, student=student, is_present=is_present)
 
 
 class ClinicViewSet(ModelViewSet):
     permission_classes = []
-    queryset = ClinicAttendance.objects.order_by('-id')
+    queryset = ClinicAttendance.objects.order_by('-id').select_related(
+        'student', 'staff_member')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -68,9 +74,9 @@ class ClinicViewSet(ModelViewSet):
         return ListClinicAttendanceSerializer
 
     def get_queryset(self):
-        queryset = ClinicAttendance.objects.order_by(
-            '-id').select_related('student', 'staff_member')
-        return queryset
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        return self.queryset
 
     def perform_create(self, serializer):
         clinic = serializer.save(student_id=self.request.user.id)
@@ -85,12 +91,15 @@ class ClinicViewSet(ModelViewSet):
 
 class ShiftAttendanceViewSet(ModelViewSet):
     permission_classes = []
-    queryset = ShiftAttendance.objects.order_by('-id')
+    queryset = ShiftAttendance.objects.order_by('-id').select_related(
+        'student', 'staff_member')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
-        queryset = ShiftAttendance.objects.order_by(
-            '-id').select_related('student', 'staff_member')
-        return queryset
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        return self.queryset
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -110,12 +119,15 @@ class ShiftAttendanceViewSet(ModelViewSet):
 
 class OperationAttendanceViewSet(ModelViewSet):
     permission_classes = []
-    queryset = OperationAttendance.objects.order_by('-id')
+    queryset = OperationAttendance.objects.order_by('-id').select_related(
+        'student', 'staff_member')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
-        queryset = OperationAttendance.objects.order_by(
-            '-id').select_related('student', 'staff_member')
-        return queryset
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        return self.queryset
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -133,33 +145,8 @@ class OperationAttendanceViewSet(ModelViewSet):
         )
 
 
-class StudentActivityStatisticAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        students = Student.objects.order_by('competence_level')
-
-        if request.user.get_role() == "student":
-            students = students.filter(id=request.user.pk)
-
-        respose_data = {"results": []}
-        for student in students:
-            respose_data['results'].append({
-                "student_name": student.full_name,
-                "competence_level": student.competence_level.name,
-                "lecture_counter": 0,
-                "lecture_attendance_count": 0,
-                "shift_count": 0,
-                "clinic_count": 0,
-                "operation_count": 0,
-                "total_score": 55,
-                "is_passed": True
-                })
-        return Response(respose_data)
-
-
 class ExamViewSet(ModelViewSet):
-    queryset = Exam.objects.all()
+    queryset = Exam.objects.order_by('-id').select_related('competence_level')
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['competence_level']
 
@@ -176,9 +163,10 @@ class ExamViewSet(ModelViewSet):
 
 
 class ExamScoreViewSet(ModelViewSet):
-    queryset = ExamScore.objects.all()
+    queryset = ExamScore.objects.order_by('-id').select_related(
+        'student', 'exam')
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['exam']
+    filterset_fields = ['exam', 'student']
     search_fields = ['student__full_name']
 
     def get_queryset(self):
@@ -226,8 +214,10 @@ class StaffMemberStatisticsAPIView(APIView):
 
     def get(self, request):
         staff_query = StaffMember.objects.all()
-        if request.user. get_role() == 'StaffMember':
+
+        if request.user.get_role() == 'StaffMember':
             staff_query = StaffMember.objects.filter(id=request.user.id)
+
         staff_members_counts = staff_query.annotate(
             action_nums=Count(
                 'studentactivity',
@@ -259,3 +249,79 @@ class StaffMemberStatisticsAPIView(APIView):
         serializer = StaffMemberStatisticsSerializer(result_page, many=True)
 
         return paginator.get_paginated_response(serializer.data)
+
+
+class StudentActivityStatisticAPIView(APIView):
+    page_size = 10
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        students = Student.objects.select_related(
+            'competence_level').order_by('competence_level')
+
+        respose_data = {"results": []}
+        description = ""
+        if request.user.get_role() == "student":
+            students = students.filter(id=request.user.pk)
+            description = students.first().competence_level.description
+
+        for student in students:
+            lecture_score = Lecture.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            shift_score = ShiftAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            clinic_score = ClinicAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            operation_score = OperationAttendance.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            exam_score = ExamScore.objects.filter(student=student).aggregate(Avg('score'))['score__avg'] or 0 # noqa
+            competence_level = {
+                "name": student.competence_level.name,
+                "description": description
+            }
+            respose_data['results'].append({
+                "student_id": student.id,
+                "student_name": student.full_name,
+                "competence_level": competence_level,
+                "lecture_counter": LectureAttendance.objects.filter(student=student).count(), # noqa
+                "lecture_score": round(lecture_score, 2),
+                "shift_score":  round(shift_score, 2),
+                "clinic_score": round(clinic_score, 2),
+                "operation_score": round(operation_score, 2),
+                "exam_score": round(exam_score, 2),
+                "total_score": round((lecture_score + shift_score +
+                                      clinic_score + operation_score) / 4, 2),
+                "is_passed": True if ((lecture_score + shift_score +
+                                       clinic_score + operation_score) / 4) \
+                > 60 else False
+                })
+        # students = students.annotate(
+        #     lecture_counter=Count(
+        #         'lectureattendance',
+        #         filter=Q(lectureattendance__is_present=True)
+        #     ),
+        #     lecture_score=Avg(
+        #         'studentactivity__score',
+        #          filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+        #                   studentactivity__lecture__isnull=False)
+        #     ),
+        #     shift_score=Avg(
+        #         'studentactivity__score',
+        #          filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+        #                   studentactivity__shiftattendance__isnull=False)
+        #     ),
+        #     clinic_score=Avg(
+        #         'studentactivity__score',
+        #         filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+        #                  studentactivity__clinicattendance__isnull=False)
+        #     ),
+        #     operation_score=Avg(
+        #         'studentactivity__score',
+        #         filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT, # noqa
+        #                  studentactivity__operationattendance__isnull=False)),
+        #     total_score=Avg(
+        #         'studentactivity__score',
+        #         filter=Q(studentactivity__approve_status=StudentActivity.ApproveStatus.ACCEPT) # noqa
+        #     ),
+        #     is_passed=Case(When(total_score__gt=60, then=Value(True)),
+        #                    default=Value(False), output_field=BooleanField())
+        #     )
+        # respose_data = StudentStatisticsSerializer(students, many=True).data
+
+        return Response(respose_data)

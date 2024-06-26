@@ -19,10 +19,10 @@ class AdminSerializer(UserSerializer):
         fields = '__all__'
 
 
-class CompetenceLevelSerializer(serializers.ModelSerializer):
+class SingleCompetenceLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompetenceLevel
-        fields = ['id', 'name', 'description']
+        fields = ['id', 'name']
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -34,7 +34,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class ListStudentSerialzier(serializers.ModelSerializer):
-    competence_level = CompetenceLevelSerializer()
+    competence_level = SingleCompetenceLevelSerializer()
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -43,7 +43,7 @@ class ListStudentSerialzier(serializers.ModelSerializer):
 
 
 class SingleStudentSerializer(serializers.ModelSerializer):
-    competence_level = CompetenceLevelSerializer()
+    competence_level = SingleCompetenceLevelSerializer()
 
     class Meta:
         model = Student
