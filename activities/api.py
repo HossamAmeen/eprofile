@@ -27,12 +27,13 @@ from activities.serializer import (ClinicAttendanceSerializer,
 from notifications.models import ActivityNotification
 from users.models import Student
 
-from .permissions import ActivityPremission
-
 
 class LectureViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, ActivityPremission]
     queryset = Lecture.objects.order_by('-id')
+    serializer_class = LectureSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
