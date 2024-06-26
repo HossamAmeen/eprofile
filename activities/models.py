@@ -36,6 +36,10 @@ class ClinicAttendance(StudentActivity):
     place = models.CharField(max_length=100)
 
 
+class SoftSkillsActivity(StudentActivity):
+    name = models.CharField(max_length=150)
+
+
 class OperationAttendance(StudentActivity):
     place = models.CharField(max_length=100)
     time = models.CharField(max_length=10)

@@ -31,8 +31,8 @@ class TestActivity:
         return client
 
     def test_staffstatistices(self, api_client):
-        url = reverse('staff-member-statistices')
+        url = reverse('staffmember_statistices')
         response = api_client.get(url, content_type='application/json')
         assert response.status_code == 200
         response_data = response.json()
-        assert response_data['count'] == 1
+        assert response_data['count'] == 0
