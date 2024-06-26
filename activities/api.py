@@ -31,12 +31,16 @@ from notifications.models import ActivityNotification
 from users.models import Student
 
 
+from activities.permissions import ActivityPremission
+
+
 class LectureViewSet(ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated, ActivityPremission]
     queryset = Lecture.objects.order_by('-id')
     serializer_class = LectureSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['staff_member', 'student']
+
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
@@ -46,7 +50,7 @@ class LectureViewSet(ModelViewSet):
         return self.queryset
 
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        if self.request.method == 'POST':
             return LectureSerializer
         return ListLectureSerializer
 

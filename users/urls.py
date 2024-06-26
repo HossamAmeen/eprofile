@@ -6,7 +6,7 @@ from users.api import (AdminViewSet, EmployeeViewSet, RequestPasswordReset,
 
 router = DefaultRouter()
 router.register(r'admins', AdminViewSet)
-router.register(r'students', StudentViewSet)
+router.register(r'students', StudentViewSet, basename='students')
 router.register(r'staff-members', StaffMemberViewSet)
 router.register(r'employees', EmployeeViewSet)
 
