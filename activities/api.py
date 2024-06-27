@@ -10,7 +10,9 @@ from rest_framework.viewsets import ModelViewSet
 
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
-                               ShiftAttendance, StaffMember)
+                               ShiftAttendance, SoftSkillsActivity,
+                               StaffMember)
+from activities.permissions import ActivityPremission
 from activities.serializer import (ClinicAttendanceSerializer,
                                    ExamScoreSerializer, ExamSerializer,
                                    LectureSerializer,
@@ -20,8 +22,10 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    ListLectureSerializer,
                                    ListOperationAttendanceSerializer,
                                    ListShiftAttendanceSerializer,
+                                   ListSoftSkillsActivitySerializer,
                                    OperationAttendanceSerializer,
                                    ShiftAttendanceSerializer,
+                                   SoftSkillsActivitySerializer,
                                    StaffMemberStatisticsSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
@@ -34,10 +38,15 @@ class LectureViewSet(ModelViewSet):
     serializer_class = LectureSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['staff_member', 'student']
+    serializer_class = LectureSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
 
     def get_serializer_class(self):
@@ -61,8 +70,8 @@ class LectureViewSet(ModelViewSet):
                 lecture=lecture, student=student, is_present=is_present)
 
 
-class ClinicViewSet(ModelViewSet):
-    permission_classes = []
+class ClinicAttendanceViewSet(ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     queryset = ClinicAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
@@ -76,6 +85,8 @@ class ClinicViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
 
     def perform_create(self, serializer):
@@ -90,7 +101,7 @@ class ClinicViewSet(ModelViewSet):
 
 
 class ShiftAttendanceViewSet(ModelViewSet):
-    permission_classes = []
+    permission_classes = (IsAuthenticated,)
     queryset = ShiftAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
@@ -99,6 +110,8 @@ class ShiftAttendanceViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
 
     def get_serializer_class(self):
@@ -118,7 +131,7 @@ class ShiftAttendanceViewSet(ModelViewSet):
 
 
 class OperationAttendanceViewSet(ModelViewSet):
-    permission_classes = []
+    permission_classes = (IsAuthenticated,)
     queryset = OperationAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend]
@@ -127,6 +140,8 @@ class OperationAttendanceViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
             return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
         return self.queryset
 
     def get_serializer_class(self):
@@ -143,6 +158,29 @@ class OperationAttendanceViewSet(ModelViewSet):
             staff_member_id=serializer.validated_data['staff_member'].id,
             link=f'/panel/operations/evaluate/{operation.id}'
         )
+
+
+class SoftSkillsActivityViewSet(ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = SoftSkillsActivity.objects.order_by('-id').select_related(
+        'student', 'staff_member')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['staff_member', 'student']
+
+    def get_queryset(self):
+        if self.request.user.get_role() == 'student':
+            return self.queryset.filter(student=self.request.user.id)
+        if self.request.user.get_role() == "staff_member":
+            return self.queryset.filter(staff_member=self.request.user.id)
+        return self.queryset
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ListSoftSkillsActivitySerializer
+        return SoftSkillsActivitySerializer
+
+    def perform_create(self, serializer):
+        serializer.save(staff_member_id=self.request.user.id)
 
 
 class ExamViewSet(ModelViewSet):

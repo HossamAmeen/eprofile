@@ -58,6 +58,7 @@ class StudentViewSet(ModelViewSet):
     serializer_class = StudentSerializer
     filterset_fields = ['competence_level']
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['full_name', 'phone', 'email']
 
     def get_serializer_class(self):
         if self.request.method == "GET":
