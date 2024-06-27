@@ -38,9 +38,6 @@ class LectureViewSet(ModelViewSet):
     serializer_class = LectureSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['staff_member', 'student']
-    serializer_class = LectureSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['staff_member', 'student']
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
