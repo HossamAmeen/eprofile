@@ -32,16 +32,14 @@ from notifications.models import ActivityNotification
 from users.models import Student
 
 
-from activities.permissions import ActivityPremission
-
-
 class LectureViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, ActivityPremission]
     queryset = Lecture.objects.order_by('-id')
     serializer_class = LectureSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['staff_member', 'student']
-
+    search_fields = ['topic', 'student__full_name', 'student__phone',
+                     'student__email']
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
@@ -75,8 +73,10 @@ class ClinicAttendanceViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = ClinicAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['staff_member', 'student']
+    search_fields = ['place', 'student__full_name', 'student__phone',
+                     'student__email']
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -105,8 +105,10 @@ class ShiftAttendanceViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = ShiftAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['staff_member', 'student']
+    search_fields = ['place', 'student__full_name', 'student__phone',
+                     'student__email']
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
@@ -135,8 +137,10 @@ class OperationAttendanceViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = OperationAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['staff_member', 'student']
+    search_fields = ['place', 'procedure', 'student__full_name',
+                     'student__phone', 'student__email']
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
@@ -165,8 +169,10 @@ class SoftSkillsActivityViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = SoftSkillsActivity.objects.order_by('-id').select_related(
         'student', 'staff_member')
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['staff_member', 'student']
+    search_fields = ['name', 'student__full_name', 'student__phone',
+                     'student__email']
 
     def get_queryset(self):
         if self.request.user.get_role() == 'student':
