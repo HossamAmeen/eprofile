@@ -12,7 +12,8 @@ router = DefaultRouter()
 
 router.register(r'lectures', LectureViewSet)
 router.register(r'clinics-attendance', ClinicAttendanceViewSet)
-router.register(r'shifts-attendance', ShiftAttendanceViewSet)
+router.register(r'shifts-attendance', ShiftAttendanceViewSet,
+                basename='shifts-attendance')
 router.register(r'operations-attendance', OperationAttendanceViewSet)
 router.register(r'exams', ExamViewSet, basename='exams')
 router.register('soft-skills', SoftSkillsActivityViewSet,
