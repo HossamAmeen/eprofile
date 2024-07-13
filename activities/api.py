@@ -30,6 +30,7 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
+from activities.filters import ActivityFilrer
 
 
 class LectureViewSet(ModelViewSet):
@@ -37,7 +38,7 @@ class LectureViewSet(ModelViewSet):
     queryset = Lecture.objects.order_by('-id')
     serializer_class = LectureSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['staff_member', 'student']
+    filterset_class = ActivityFilrer
     search_fields = ['topic', 'student__full_name', 'student__phone',
                      'student__email']
 
@@ -74,7 +75,7 @@ class ClinicAttendanceViewSet(ModelViewSet):
     queryset = ClinicAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['staff_member', 'student']
+    filterset_class = ActivityFilrer
     search_fields = ['place', 'student__full_name', 'student__phone',
                      'student__email']
 
@@ -106,7 +107,7 @@ class ShiftAttendanceViewSet(ModelViewSet):
     queryset = ShiftAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['staff_member', 'student']
+    filterset_class = ActivityFilrer
     search_fields = ['place', 'student__full_name', 'student__phone',
                      'student__email']
 
@@ -138,7 +139,7 @@ class OperationAttendanceViewSet(ModelViewSet):
     queryset = OperationAttendance.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['staff_member', 'student']
+    filterset_class = ActivityFilrer
     search_fields = ['place', 'procedure', 'student__full_name',
                      'student__phone', 'student__email']
 
@@ -170,7 +171,7 @@ class SoftSkillsActivityViewSet(ModelViewSet):
     queryset = SoftSkillsActivity.objects.order_by('-id').select_related(
         'student', 'staff_member')
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['staff_member', 'student']
+    filterset_class = ActivityFilrer
     search_fields = ['name', 'student__full_name', 'student__phone',
                      'student__email']
 
@@ -303,6 +304,16 @@ class StudentActivityStatisticAPIView(APIView):
     def get(self, request):
         students = Student.objects.select_related(
             'competence_level').order_by('competence_level')
+
+        search = request.query_params.get('search')
+        if search:
+            students = students.filter(
+                Q(email__icontains=search) | Q(phone__icontains=search) |
+                Q(full_name__icontains=search))
+
+        if request.query_params.get('competence_level'):
+            students = students.filter(
+                competence_level=request.query_params.get('competence_level'))
 
         respose_data = {"results": []}
         description = ""
