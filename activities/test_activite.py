@@ -3,121 +3,180 @@ import json
 import pytest
 from django.test import Client
 from django.urls import reverse
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from activities.models import Exam, ShiftAttendance
-from users.models import CompetenceLevel
+from users.models import CompetenceLevel, StaffMember, Student
 
 
 @pytest.mark.django_db
-def test_exam_list():
+class TestExamAPI:
 
-    client = Client()
-    url = "exams-list"
-    response = client.get(reverse(url))
-    assert response.status_code == 200
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.client = Client()
+        self.competence_level = CompetenceLevel.objects.create(name='Level 1')
+        self.url_list = "exams-list"
+        self.url_detail = "exams-detail"
 
+    def test_exam_list(self):
+        response = self.client.get(reverse(self.url_list))
+        assert response.status_code == 200
 
-@pytest.mark.django_db
-def test_exam_create():
+    def test_exam_create(self):
+        data = {
+            "date": "2024-05-06",
+            "competence_level": self.competence_level.id
+        }
+        response = self.client.post(reverse(
+            self.url_list),
+            data=json.dumps(data),
+            content_type='application/json')
+        assert response.status_code == 201
 
-    competence_level = CompetenceLevel.objects.create(name='Level 1')
-    client = Client()
-    data = {
-        "date": "2024-05-06",
-        "competence_level": competence_level.id
+    def test_exam_update(self):
+        exam = Exam.objects.create(
+            date="2024-05-06",
+            competence_level=self.competence_level)
+        update_data = {
+            "date": "2024-06-10",
+            "competence_level": self.competence_level.id
+        }
+        response = self.client.put(reverse(
+            self.url_detail,
+            args=[exam.id]),
+            data=json.dumps(update_data),
+            content_type='application/json')
+        assert response.status_code == 200
 
-    }
-    response = client.post(reverse('exams-list'),
-                           data=json.dumps(data),
-                           content_type='application/json')
-    assert response.status_code == 201
+    def test_exam_delete(self):
+        exam = Exam.objects.create(
+            date="2024-05-06",
+            competence_level=self.competence_level)
+        response = self.client.delete(reverse(self.url_detail, args=[exam.id]))
+        assert response.status_code == 204
 
-
-@pytest.mark.django_db
-def test_exam_update():
-    competence_level = CompetenceLevel.objects.create(name='Level 1')
-    client = Client()
-    exam = Exam.objects.create(date="2024-05-06",
-                               competence_level=competence_level)
-    update_data = {
-        "date": "2024-06-10",
-        "competence_level": competence_level.id
-
-    }
-
-    response = client.put(reverse('exams-detail', args=[exam.id]),
-                          data=json.dumps(update_data),
-                          content_type='application/json')
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_exam_delete():
-    competence_level = CompetenceLevel.objects.create(name='Level 1')
-    client = Client()
-    exam = Exam.objects.create(date="2024-05-06",
-                               competence_level=competence_level)
-    response = client.delete(reverse('exams-detail', args=[exam.id]))
-    assert response.status_code == 204
-
-
-@pytest.mark.django_db
-def test_exam_retrive():
-    competence_level = CompetenceLevel.objects.create(name='Level 1')
-    client = Client()
-    exam = Exam.objects.create(date="2024-05-06",
-                               competence_level=competence_level)
-    update_data = {
-        "date": "2024-06-10",
-        "competence_level": competence_level.id
-
-    }
-
-    response = client.patch(reverse('exams-detail', args=[exam.id]),
-                            data=json.dumps(update_data),
-                            content_type='application/json')
-    assert response.status_code == 200
+    def test_exam_retrive(self):
+        exam = Exam.objects.create(
+            date="2024-05-06",
+            competence_level=self.competence_level)
+        update_data = {
+            "date": "2024-06-10",
+            "competence_level": self.competence_level.id
+        }
+        response = self.client.patch(reverse(
+            self.url_detail,
+            args=[exam.id]),
+            data=json.dumps(update_data),
+            content_type='application/json')
+        assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_shiftattendance_list():
+class TestShiftAttendanceAPI:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.client = Client()
+        self.url_list = "shiftattendance-list"
+        self.url_detail = "shiftattendance-detail"
 
-    client = Client()
-    url = "shifts-attendance-list"
-    response = client.get(reverse(url))
-    assert response.status_code == 200
+    @pytest.fixture
+    def create_user(self):
+        competence_level = CompetenceLevel.objects.create(name='Level 1')
+        student = Student.objects.create(
+            full_name="student11",
+            email="student@gmail.com",
+            phone="01012070620",
+            birth_of_date="1999-09-02",
+            competence_level=competence_level,
+            password="admin"
+        )
+        staff_member = StaffMember.objects.create(
+            full_name="Mohamed",
+            email="mohamed@gmail.com",
+            phone="01010079795",
+            password="admin",
+            specialty="dev"
+        )
+        return student, staff_member
 
+    @pytest.fixture
+    def auth_client(self, create_user):
+        student, _ = create_user
+        refresh = RefreshToken.for_user(student)
+        access_token = str(refresh.access_token)
+        self.client.defaults['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
+        return self.client
 
-@pytest.mark.django_db
-def test_shiftattendance_update():
+    def test_shiftattendance_list(self, auth_client):
+        response = auth_client.get(reverse(self.url_list))
+        assert response.status_code == 200
 
-    shiftattendance = ShiftAttendance.objects.create(
-        date="2024-05-06",
-        place="hospital",
-        time="morning"
-    )
+    def test_shiftattendance_update(self, auth_client, create_user):
+        student, staff_member = create_user
+        shiftattendance = ShiftAttendance.objects.create(
+            date="2024-05-06",
+            place="hospital",
+            time="morning",
+            staff_member=staff_member,
+            student=student
+        )
+        update_data = {
+            "date": "2024-06-10",
+            "place": "clinic",
+            "time": "afternoon",
+        }
+        url = reverse(self.url_detail, args=[shiftattendance.id])
+        response = auth_client.patch(
+            url, data=json.dumps(update_data),
+            content_type='application/json')
+        assert response.status_code == 200
 
-    client = Client()
+    def test_shiftsattendance_delete(self, auth_client, create_user):
+        student, staff_member = create_user
+        shiftsattendance = ShiftAttendance.objects.create(
+            date="2024-05-06",
+            place="clinic",
+            time="morning",
+            staff_member=staff_member,
+            student=student
+        )
+        url = reverse(self.url_detail, args=[shiftsattendance.id])
+        response = auth_client.delete(url)
+        assert response.status_code == 204
 
-    update_data = {
-        "date": "2024-06-10",
-        "place": "clinic",
-        "time": "afternoon",
-    }
+    def test_shiftattendance_create(self, auth_client, create_user):
+        student, staff_member = create_user
+        data = {
+            "date": "2024-05-01",
+            "place": "hospital",
+            "staff_member": staff_member.id,
+            "student": student.id,
+            "time": "morning"
+        }
+        response = auth_client.post(
+            reverse(self.url_list),
+            data=json.dumps(data),
+            content_type='application/json')
+        assert response.status_code == 201
 
-    url = reverse('shifts-attendance-detail', args=[shiftattendance.id])
-    response = client.patch(url, data=json.dumps(update_data),
-                            content_type='application/json')
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_shiftsattendance_delete():
-    client = Client()
-    shiftsattendance = ShiftAttendance.objects.create(
-                                                    date="2024-05-06",
-                                                    place="clinic",
-                                                    time="morning")
-    response = client.delete(reverse(
-        'shifts-attendance-detail', args=[shiftsattendance.id]))
-    assert response.status_code == 204
+    def test_shiftattendance_retrive(self, auth_client, create_user):
+        student, staff_member = create_user
+        shiftattendance = ShiftAttendance.objects.create(
+            date="2024-05-06",
+            place="hospital",
+            time="morning",
+            staff_member=staff_member,
+            student=student
+        )
+        update_data = {
+            "date": "2024-06-10",
+            "place": "clinic",
+            "time": "afternoon",
+        }
+        url = reverse(self.url_detail, args=[shiftattendance.id])
+        response = auth_client.patch(
+            url,
+            data=json.dumps(update_data),
+            content_type='application/json')
+        assert response.status_code == 200
