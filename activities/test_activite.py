@@ -18,6 +18,9 @@ class TestExamAPI:
         self.competence_level = CompetenceLevel.objects.create(name='Level 1')
         self.url_list = "exams-list"
         self.url_detail = "exams-detail"
+        self.exam_objects = Exam.objects.create(
+            date="2024-05-06",
+            competence_level=self.competence_level)
 
     def test_exam_list(self):
         response = self.client.get(reverse(self.url_list))
@@ -35,38 +38,31 @@ class TestExamAPI:
         assert response.status_code == 201
 
     def test_exam_update(self):
-        exam = Exam.objects.create(
-            date="2024-05-06",
-            competence_level=self.competence_level)
         update_data = {
             "date": "2024-06-10",
             "competence_level": self.competence_level.id
         }
         response = self.client.put(reverse(
             self.url_detail,
-            args=[exam.id]),
+            args=[self.exam_objects.id]),
             data=json.dumps(update_data),
             content_type='application/json')
         assert response.status_code == 200
 
     def test_exam_delete(self):
-        exam = Exam.objects.create(
-            date="2024-05-06",
-            competence_level=self.competence_level)
-        response = self.client.delete(reverse(self.url_detail, args=[exam.id]))
+        response = self.client.delete(reverse(
+            self.url_detail,
+            args=[self.exam_objects.id]))
         assert response.status_code == 204
 
     def test_exam_retrive(self):
-        exam = Exam.objects.create(
-            date="2024-05-06",
-            competence_level=self.competence_level)
         update_data = {
             "date": "2024-06-10",
             "competence_level": self.competence_level.id
         }
         response = self.client.patch(reverse(
             self.url_detail,
-            args=[exam.id]),
+            args=[self.exam_objects.id]),
             data=json.dumps(update_data),
             content_type='application/json')
         assert response.status_code == 200
@@ -98,11 +94,18 @@ class TestShiftAttendanceAPI:
             password="admin",
             specialty="dev"
         )
-        return student, staff_member
+        shiftattendance_objects = ShiftAttendance.objects.create(
+            date="2024-05-06",
+            place="hospital",
+            time="morning",
+            staff_member=staff_member,
+            student=student
+        )
+        return student, staff_member, shiftattendance_objects
 
     @pytest.fixture
     def auth_client(self, create_user):
-        student, _ = create_user
+        student, _, _ = create_user
         refresh = RefreshToken.for_user(student)
         access_token = str(refresh.access_token)
         self.client.defaults['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
@@ -113,40 +116,27 @@ class TestShiftAttendanceAPI:
         assert response.status_code == 200
 
     def test_shiftattendance_update(self, auth_client, create_user):
-        student, staff_member = create_user
-        shiftattendance = ShiftAttendance.objects.create(
-            date="2024-05-06",
-            place="hospital",
-            time="morning",
-            staff_member=staff_member,
-            student=student
-        )
+        _, _, shiftattendance_objects = create_user
         update_data = {
             "date": "2024-06-10",
             "place": "clinic",
             "time": "afternoon",
         }
-        url = reverse(self.url_detail, args=[shiftattendance.id])
+        url = reverse(self.url_detail, args=[shiftattendance_objects.id])
         response = auth_client.patch(
             url, data=json.dumps(update_data),
             content_type='application/json')
         assert response.status_code == 200
 
     def test_shiftsattendance_delete(self, auth_client, create_user):
-        student, staff_member = create_user
-        shiftsattendance = ShiftAttendance.objects.create(
-            date="2024-05-06",
-            place="clinic",
-            time="morning",
-            staff_member=staff_member,
-            student=student
-        )
-        url = reverse(self.url_detail, args=[shiftsattendance.id])
+        _, _, shiftattendance_objects = create_user
+
+        url = reverse(self.url_detail, args=[shiftattendance_objects.id])
         response = auth_client.delete(url)
         assert response.status_code == 204
 
     def test_shiftattendance_create(self, auth_client, create_user):
-        student, staff_member = create_user
+        student, staff_member, _ = create_user
         data = {
             "date": "2024-05-01",
             "place": "hospital",
@@ -161,20 +151,13 @@ class TestShiftAttendanceAPI:
         assert response.status_code == 201
 
     def test_shiftattendance_retrive(self, auth_client, create_user):
-        student, staff_member = create_user
-        shiftattendance = ShiftAttendance.objects.create(
-            date="2024-05-06",
-            place="hospital",
-            time="morning",
-            staff_member=staff_member,
-            student=student
-        )
+        _, _, shiftattendance_objects = create_user
         update_data = {
             "date": "2024-06-10",
             "place": "clinic",
             "time": "afternoon",
         }
-        url = reverse(self.url_detail, args=[shiftattendance.id])
+        url = reverse(self.url_detail, args=[shiftattendance_objects.id])
         response = auth_client.patch(
             url,
             data=json.dumps(update_data),
