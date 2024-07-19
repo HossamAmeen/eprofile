@@ -60,6 +60,8 @@ class StaffMemberViewSet(UserViewSet):
     permission_classes = []
     queryset = StaffMember.objects.order_by('-id')
     serializer_class = StaffMemberSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['full_name', 'phone', 'email']
 
 
 class EmployeeViewSet(UserViewSet):
