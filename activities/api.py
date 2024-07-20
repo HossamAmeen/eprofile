@@ -8,6 +8,7 @@ from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from activities.filters import ActivityFilrer
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
                                ShiftAttendance, SoftSkillsActivity,
@@ -30,7 +31,6 @@ from activities.serializer import (ClinicAttendanceSerializer,
                                    lectureAttendanceSerializer)
 from notifications.models import ActivityNotification
 from users.models import Student
-from activities.filters import ActivityFilrer
 
 
 class LectureViewSet(ModelViewSet):
