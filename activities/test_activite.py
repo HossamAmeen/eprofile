@@ -101,7 +101,7 @@ class TestShiftAttendanceAPI:
         return staff_member
 
     @pytest.fixture
-    def create_shiftattendance_objects(
+    def create_shift_attendance_objects(
       self, create_staff_member, create_student):
         staff_member = create_staff_member
         student = create_student
@@ -122,15 +122,13 @@ class TestShiftAttendanceAPI:
         self.client.defaults['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
         return self.client
 
-    def test_list_shiftattendance(self, auth_client):
+    def test_list_shift_attendance(self, auth_client):
         response = auth_client.get(reverse(self.url_list))
         assert response.status_code == 200
 
-    def test_update_shiftattendance(
-            self,
-            auth_client,
-            create_shiftattendance_objects):
-        shiftattendance_objects = create_shiftattendance_objects
+    def test_update_shift_attendance(
+       self, auth_client, create_shift_attendance_objects):
+        shiftattendance_objects = create_shift_attendance_objects
         update_data = {
             "date": "2024-06-10",
             "place": "clinic",
@@ -142,21 +140,16 @@ class TestShiftAttendanceAPI:
             content_type='application/json')
         assert response.status_code == 200
 
-    def test_delete_shiftattendance(
-            self,
-            auth_client,
-            create_shiftattendance_objects):
-        shiftattendance_objects = create_shiftattendance_objects
+    def test_delete_shift_attendance(
+       self, auth_client, create_shift_attendance_objects):
+        shiftattendance_objects = create_shift_attendance_objects
 
         url = reverse(self.url_detail, args=[shiftattendance_objects.id])
         response = auth_client.delete(url)
         assert response.status_code == 204
 
-    def test_create_shiftattendance(
-            self,
-            auth_client,
-            create_student,
-            create_staff_member):
+    def test_create_shift_attendance(
+       self, auth_client, create_student, create_staff_member):
         student = create_student
         staff_member = create_staff_member
 
@@ -173,11 +166,9 @@ class TestShiftAttendanceAPI:
             content_type='application/json')
         assert response.status_code == 201
 
-    def test_retrive_shiftattendance(
-            self,
-            auth_client,
-            create_shiftattendance_objects):
-        shiftattendance_objects = create_shiftattendance_objects
+    def test_retrive_shift_attendance(
+       self, auth_client, create_shift_attendance_objects):
+        shiftattendance_objects = create_shift_attendance_objects
         update_data = {
             "date": "2024-06-10",
             "place": "clinic",
