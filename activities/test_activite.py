@@ -105,14 +105,14 @@ class TestShiftAttendanceAPI:
       self, create_staff_member, create_student):
         staff_member = create_staff_member
         student = create_student
-        shiftattendance_objects = ShiftAttendance.objects.create(
+        shift_attendance = ShiftAttendance.objects.create(
             date="2024-05-06",
             place="hospital",
             time="morning",
             staff_member=staff_member,
             student=student
         )
-        return shiftattendance_objects
+        return shift_attendance
 
     @pytest.fixture
     def auth_client(self, create_student):
