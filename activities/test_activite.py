@@ -55,7 +55,7 @@ class TestExamAPI:
             args=[self.exam_objects.id]))
         assert response.status_code == 204
 
-    def test_retrive_exam(self):
+    def test_retrieve_exam(self):
         update_data = {
             "date": "2024-06-10",
             "competence_level": self.competence_level.id
@@ -166,7 +166,7 @@ class TestShiftAttendanceAPI:
             content_type='application/json')
         assert response.status_code == 201
 
-    def test_retrive_shift_attendance(
+    def test_retrieve_shift_attendance(
        self, auth_client, create_shift_attendance_objects):
         shiftattendance_objects = create_shift_attendance_objects
         update_data = {
