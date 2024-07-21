@@ -8,7 +8,7 @@ from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from activities.filters import ActivityFilrer
+from activities.filters import ActivityFilrer, ExamFilter
 from activities.models import (ClinicAttendance, Exam, ExamScore, Lecture,
                                LectureAttendance, OperationAttendance,
                                ShiftAttendance, SoftSkillsActivity,
@@ -193,6 +193,7 @@ class SoftSkillsActivityViewSet(ModelViewSet):
 
 class ExamViewSet(ModelViewSet):
     queryset = Exam.objects.order_by('-id').select_related('competence_level')
+    filterset_class = ExamFilter
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['competence_level']
 
